@@ -41,7 +41,7 @@
 
     <section v-if="pending" class="loading">불러오는 중...</section>
     <section v-else-if="error" class="error">{{ error.message }}</section>
-    <section v-else>
+    <section v-else class="notes-section">
       <div v-if="!data?.items.length" class="empty">아직 노트가 없습니다.</div>
       <div v-else class="notes-grid">
         <NoteCard v-for="item in data.items" :key="item.note.id" :item="item" />
@@ -86,7 +86,7 @@ const filters = reactive({
   sort: (route.query.sort as string) || 'updatedAt',
   order: (route.query.order as string) || 'desc',
   page: toNumber(route.query.page as string, 1),
-  pageSize: toNumber(route.query.pageSize as string, 20),
+  pageSize: toNumber(route.query.pageSize as string, 9),
 })
 
 watch(
@@ -98,7 +98,7 @@ watch(
     filters.sort = (query.sort as string) || 'updatedAt'
     filters.order = (query.order as string) || 'desc'
     filters.page = toNumber(query.page as string, 1)
-    filters.pageSize = toNumber(query.pageSize as string, 20)
+    filters.pageSize = toNumber(query.pageSize as string, 9)
   },
 )
 

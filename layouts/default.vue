@@ -3,7 +3,7 @@
     <header class="top-bar">
       <div class="brand">
         <NuxtLink to="/" class="brand-mark">Tasting Notes</NuxtLink>
-        <p>술 테이스팅을 기록하고 정리하세요.</p>
+        <p>나의 술 이야기</p>
       </div>
       <nav class="nav-links">
         <NuxtLink to="/" class="ghost">노트 목록</NuxtLink>
@@ -17,7 +17,7 @@
     </main>
 
     <footer class="footer">
-      <p>채준혁의 술 이야기</p>
+      <p>푸터자리</p>
     </footer>
   </div>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <article class="note-card">
+  <NuxtLink class="note-card" :to="`/notes/${item.note.id}`">
     <header>
       <div>
         <p class="eyebrow">{{ kindLabel(item.product.kind) }}</p>
@@ -9,10 +9,13 @@
       <div
         v-if="item.note.rating !== null && item.note.rating !== undefined"
         class="rating-badge"
+        :style="{ '--rating': item.note.rating }"
         :aria-label="`평점 ${item.note.rating.toFixed(1)}점`"
       >
-        <span class="rating-label">평점</span>
-        <span class="rating-value">{{ item.note.rating.toFixed(1) }}</span>
+        <div class="rating-text">
+          <span class="rating-value">{{ item.note.rating.toFixed(1) }}</span>
+          <span class="rating-unit">점</span>
+        </div>
       </div>
     </header>
 
@@ -21,9 +24,7 @@
     <div v-if="item.tags.length" class="chip-list">
       <span v-for="tag in item.tags" :key="tag" class="chip small">{{ tag }}</span>
     </div>
-
-    <NuxtLink class="ghost" :to="`/notes/${item.note.id}`">상세 보기 →</NuxtLink>
-  </article>
+  </NuxtLink>
 </template>
 
 <script setup lang="ts">

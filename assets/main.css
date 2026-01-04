@@ -264,12 +264,34 @@ button:disabled {
   flex-direction: column;
   gap: 0.75rem;
   animation: fade-up 0.5s ease both;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.note-card:hover,
+.note-card:focus-visible {
+  transform: translateY(-4px);
+  border-color: rgba(197, 111, 45, 0.4);
+  box-shadow: 0 16px 26px rgba(31, 27, 22, 0.16);
 }
 
 .note-card header {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
+}
+
+.note-card header > div {
+  min-width: 0;
+}
+
+.note-card h3 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .eyebrow {
@@ -280,29 +302,54 @@ button:disabled {
 }
 
 .rating-badge {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.15rem;
-  padding: 0.45rem 0.7rem;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #f3bf84, #c56f2d);
-  color: #fff;
-  box-shadow: 0 10px 18px rgba(197, 111, 45, 0.28);
-  min-width: 64px;
+  --rating: 0;
+  --rating-percent: clamp(0%, calc(var(--rating) * 10%), 100%);
+  width: 64px;
+  height: 64px;
+  aspect-ratio: 1 / 1;
+  flex: 0 0 64px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  position: relative;
+  isolation: isolate;
+  background: conic-gradient(
+    from 0deg,
+    rgba(31, 27, 22, 0.12) 0 calc(100% - var(--rating-percent)),
+    rgba(197, 111, 45, 0.95) 0 100%
+  );
+  box-shadow: 0 12px 20px rgba(31, 27, 22, 0.16);
 }
 
-.rating-label {
-  font-size: 0.6rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  opacity: 0.9;
+.rating-badge::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: rgba(255, 248, 240, 0.92);
+  border: 1px solid rgba(197, 111, 45, 0.22);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(6px);
+}
+
+.rating-text {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 0.1rem;
 }
 
 .rating-value {
   font-family: var(--font-display);
   font-size: 1.05rem;
   font-weight: 600;
+  color: var(--accent-strong);
+}
+
+.rating-unit {
+  font-size: 0.65rem;
+  color: var(--muted);
 }
 
 .note-meta {
@@ -412,6 +459,10 @@ button:disabled {
   align-items: center;
   gap: 1rem;
   margin-top: 2rem;
+}
+
+.notes-section {
+  margin-top: 1rem;
 }
 
 .detail-header {

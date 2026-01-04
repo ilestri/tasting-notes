@@ -61,3 +61,7 @@
 
 - 커스텀 필드는 서버에서 JSON parse/stringify 처리
 - `DB_PATH` 기본 경로에 `data/` 디렉터리 필요
+
+## 커밋 메시지 규칙
+
+- 일반적인 Conventional Commits 형식으로 한글 작성
