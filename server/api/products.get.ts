@@ -2,7 +2,7 @@ import { getQuery } from 'h3'
 import { and, eq, like, sql } from 'drizzle-orm'
 import { db } from '~/server/db'
 import { notes, products } from '~/server/db/schema'
-import { KIND_VALUES, badRequest, parseExtraJson } from '~/server/utils/validation'
+import { KIND_VALUES, badRequest } from '~/server/utils/validation'
 
 export default defineEventHandler((event) => {
   const query = getQuery(event)
@@ -37,7 +37,6 @@ export default defineEventHandler((event) => {
       vintage: products.vintage,
       age: products.age,
       volumeMl: products.volumeMl,
-      extraJson: products.extraJson,
       notesCount: sql<number>`count(${notes.id})`,
     })
     .from(products)
@@ -60,6 +59,5 @@ export default defineEventHandler((event) => {
     age: row.age,
     volumeMl: row.volumeMl,
     notesCount: row.notesCount,
-    extraFields: parseExtraJson(row.extraJson),
   }))
 })

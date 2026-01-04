@@ -27,7 +27,6 @@ import { useRoute } from 'vue-router'
 import { navigateTo, useAsyncData } from 'nuxt/app'
 import { useAdminToken } from '~/composables/useAdminToken'
 import type { NoteFormModel } from '~/types/noteForm'
-import { fieldsFromMap, mapFromFields } from '~/utils/customFields'
 import { getErrorMessage } from '~/utils/errors'
 
 const route = useRoute()
@@ -41,7 +40,6 @@ interface NoteDetailResponse {
     productId: string
     rating: number | null
     comment: string | null
-    extraFields: Record<string, string | number | boolean>
     createdAt: string
     updatedAt: string
   }
@@ -56,7 +54,6 @@ interface NoteDetailResponse {
     vintage: string | null
     age: number | null
     volumeMl: number | null
-    extraFields: Record<string, string | number | boolean>
     createdAt: string
     updatedAt: string
   }
@@ -113,12 +110,10 @@ watch(
         vintage: value.product.vintage,
         age: value.product.age,
         volume_ml: value.product.volumeMl,
-        extraFields: fieldsFromMap(value.product.extraFields),
       },
       note: {
         rating: value.note.rating,
         comment: value.note.comment,
-        extraFields: fieldsFromMap(value.note.extraFields),
       },
       terms: {
         nose: value.terms.nose || [],
@@ -153,14 +148,8 @@ const handleSubmit = async (payload: NoteFormModel) => {
   saving.value = true
   try {
     const body = {
-      product: {
-        ...payload.product,
-        extraFields: mapFromFields(payload.product.extraFields),
-      },
-      note: {
-        ...payload.note,
-        extraFields: mapFromFields(payload.note.extraFields),
-      },
+      product: payload.product,
+      note: payload.note,
       terms: payload.terms,
       tags: payload.tags,
       attachments: payload.attachments

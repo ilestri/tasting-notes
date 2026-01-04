@@ -50,7 +50,6 @@ interface ProductResult {
   vintage: string | null
   age: number | null
   volumeMl: number | null
-  extraFields: Record<string, string | number | boolean>
 }
 
 const emit = defineEmits<{

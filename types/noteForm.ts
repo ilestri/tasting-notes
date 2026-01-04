@@ -1,5 +1,3 @@
-import type { CustomField } from './customFields'
-
 export interface ProductForm {
   id?: string
   kind: string
@@ -11,13 +9,11 @@ export interface ProductForm {
   vintage: string | null
   age: number | null
   volume_ml: number | null
-  extraFields: CustomField[]
 }
 
 export interface NoteFormFields {
   rating: number | null
   comment: string | null
-  extraFields: CustomField[]
 }
 
 export interface NoteFormTerms {

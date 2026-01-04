@@ -546,24 +546,6 @@ button:disabled {
   gap: 1rem;
 }
 
-.kv {
-  display: grid;
-  gap: 0.6rem;
-}
-
-.kv div {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px dashed var(--line);
-  padding-bottom: 0.35rem;
-}
-
-.dual-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-}
-
 @keyframes fade-up {
   from {
     opacity: 0;

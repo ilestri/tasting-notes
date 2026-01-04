@@ -52,12 +52,6 @@
       </div>
     </section>
 
-    <CustomFieldsEditor
-      v-model="state.product.extraFields"
-      title="제품 커스텀 필드"
-      description="제품 단위 커스텀 메타(예: cask, peat_ppm 등)"
-    />
-
     <section class="card">
       <header class="section-header">
         <h2>노트</h2>
@@ -97,12 +91,6 @@
       />
     </section>
 
-    <CustomFieldsEditor
-      v-model="state.note.extraFields"
-      title="노트 커스텀 필드"
-      description="노트 단위 커스텀 값(예: glass, temperature 등)"
-    />
-
     <AttachmentsEditor v-model="state.attachments" />
 
     <div class="form-actions">
@@ -115,7 +103,6 @@
 <script setup lang="ts">
 import { isProxy, ref, toRaw, watch } from 'vue'
 import type { NoteFormModel } from '~/types/noteForm'
-import { fieldsFromMap } from '~/utils/customFields'
 import { KIND_OPTIONS } from '~/utils/kind'
 
 const props = withDefaults(
@@ -167,15 +154,6 @@ const submit = () => {
     formError.value = '제품 이름은 필수입니다.'
     return
   }
-  const productKeys = state.value.product.extraFields
-    .map((field) => field.key.trim())
-    .filter(Boolean)
-  const noteKeys = state.value.note.extraFields.map((field) => field.key.trim()).filter(Boolean)
-  const hasDup = (keys: string[]) => new Set(keys).size !== keys.length
-  if (hasDup(productKeys) || hasDup(noteKeys)) {
-    formError.value = '커스텀 필드 키가 중복되었습니다.'
-    return
-  }
   const hasEmptyAttachment = state.value.attachments.some((item) => !item.url_or_path.trim())
   if (hasEmptyAttachment) {
     formError.value = '첨부의 URL/Path를 입력하세요.'
@@ -195,7 +173,6 @@ const applyProduct = (product: {
   vintage: string | null
   age: number | null
   volumeMl: number | null
-  extraFields: Record<string, string | number | boolean>
 }) => {
   state.value.product.id = product.id
   state.value.product.kind = product.kind
@@ -207,7 +184,6 @@ const applyProduct = (product: {
   state.value.product.vintage = product.vintage
   state.value.product.age = product.age
   state.value.product.volume_ml = product.volumeMl
-  state.value.product.extraFields = fieldsFromMap(product.extraFields)
 }
 
 const clearProduct = () => {

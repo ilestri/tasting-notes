@@ -11,7 +11,6 @@ export const products = sqliteTable('products', {
   vintage: text('vintage'),
   age: integer('age'),
   volumeMl: integer('volume_ml'),
-  extraJson: text('extra_json'),
   createdAt: text('created_at').notNull(),
   updatedAt: text('updated_at').notNull(),
 })
@@ -25,7 +24,6 @@ export const notes = sqliteTable(
       .references(() => products.id, { onDelete: 'restrict' }),
     rating: real('rating'),
     comment: text('comment'),
-    extraJson: text('extra_json'),
     createdAt: text('created_at').notNull(),
     updatedAt: text('updated_at').notNull(),
   },

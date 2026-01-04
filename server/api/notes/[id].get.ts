@@ -2,7 +2,6 @@ import { createError, getRouterParam } from 'h3'
 import { eq } from 'drizzle-orm'
 import { db } from '~/server/db'
 import { attachments, noteTags, noteTerms, notes, products, tags } from '~/server/db/schema'
-import { parseExtraJson } from '~/server/utils/validation'
 
 export default defineEventHandler((event) => {
   const id = getRouterParam(event, 'id')
@@ -16,7 +15,6 @@ export default defineEventHandler((event) => {
       noteProductId: notes.productId,
       noteRating: notes.rating,
       noteComment: notes.comment,
-      noteExtraJson: notes.extraJson,
       noteCreatedAt: notes.createdAt,
       noteUpdatedAt: notes.updatedAt,
       productId: products.id,
@@ -29,7 +27,6 @@ export default defineEventHandler((event) => {
       productVintage: products.vintage,
       productAge: products.age,
       productVolumeMl: products.volumeMl,
-      productExtraJson: products.extraJson,
       productCreatedAt: products.createdAt,
       productUpdatedAt: products.updatedAt,
     })
@@ -73,7 +70,6 @@ export default defineEventHandler((event) => {
       productId: row.noteProductId,
       rating: row.noteRating,
       comment: row.noteComment,
-      extraFields: parseExtraJson(row.noteExtraJson),
       createdAt: row.noteCreatedAt,
       updatedAt: row.noteUpdatedAt,
     },
@@ -88,7 +84,6 @@ export default defineEventHandler((event) => {
       vintage: row.productVintage,
       age: row.productAge,
       volumeMl: row.productVolumeMl,
-      extraFields: parseExtraJson(row.productExtraJson),
       createdAt: row.productCreatedAt,
       updatedAt: row.productUpdatedAt,
     },

@@ -119,7 +119,6 @@ interface NotesListResponse {
       productId: string
       rating: number | null
       comment: string | null
-      extraFields: Record<string, string | number | boolean>
       createdAt: string
       updatedAt: string
     }
@@ -134,7 +133,6 @@ interface NotesListResponse {
       vintage: string | null
       age: number | null
       volumeMl: number | null
-      extraFields: Record<string, string | number | boolean>
       createdAt: string
       updatedAt: string
     }

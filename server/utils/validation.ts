@@ -40,69 +40,6 @@ export const parseRating = (value: unknown): number | null => {
   return rating
 }
 
-export const parseExtraFields = (
-  value: unknown,
-): { json: string | null; data: Record<string, string | number | boolean> | null } => {
-  if (value === undefined || value === null) {
-    return { json: null, data: null as Record<string, string | number | boolean> | null }
-  }
-  if (!isRecord(value)) {
-    badRequest('extraFields must be an object')
-  }
-
-  const data: Record<string, string | number | boolean> = {}
-
-  for (const [key, rawValue] of Object.entries(value)) {
-    if (!key.trim()) {
-      badRequest('extraFields key cannot be empty')
-    }
-    if (
-      typeof rawValue === 'string' ||
-      typeof rawValue === 'number' ||
-      typeof rawValue === 'boolean'
-    ) {
-      data[key] = rawValue
-    } else {
-      badRequest('extraFields values must be string, number, or boolean')
-    }
-  }
-
-  if (Object.keys(data).length === 0) {
-    return { json: null, data: {} }
-  }
-
-  try {
-    return { json: JSON.stringify(data), data }
-  } catch {
-    badRequest('extraFields could not be serialized')
-  }
-
-  return { json: null, data: {} }
-}
-
-export const parseExtraJson = (value: string | null): Record<string, string | number | boolean> => {
-  if (!value) return {}
-  try {
-    const parsed = JSON.parse(value)
-    if (!isRecord(parsed)) return {}
-
-    const data: Record<string, string | number | boolean> = {}
-    for (const [key, rawValue] of Object.entries(parsed)) {
-      if (
-        typeof rawValue === 'string' ||
-        typeof rawValue === 'number' ||
-        typeof rawValue === 'boolean'
-      ) {
-        data[key] = rawValue
-      }
-    }
-
-    return data
-  } catch {
-    return {}
-  }
-}
-
 export const normalizeStringArray = (value: unknown): string[] => {
   if (value === undefined || value === null) return []
   if (!Array.isArray(value)) {

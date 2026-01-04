@@ -81,32 +81,6 @@
         </div>
       </div>
     </section>
-
-    <section class="card">
-      <h2>커스텀 필드</h2>
-      <div class="dual-grid">
-        <div>
-          <h4>제품</h4>
-          <dl v-if="Object.keys(data.product.extraFields).length" class="kv">
-            <div v-for="(value, key) in data.product.extraFields" :key="key">
-              <dt>{{ key }}</dt>
-              <dd>{{ value }}</dd>
-            </div>
-          </dl>
-          <p v-else class="muted">없음</p>
-        </div>
-        <div>
-          <h4>노트</h4>
-          <dl v-if="Object.keys(data.note.extraFields).length" class="kv">
-            <div v-for="(value, key) in data.note.extraFields" :key="key">
-              <dt>{{ key }}</dt>
-              <dd>{{ value }}</dd>
-            </div>
-          </dl>
-          <p v-else class="muted">없음</p>
-        </div>
-      </div>
-    </section>
   </section>
 </template>
 
@@ -124,7 +98,6 @@ interface NoteDetailResponse {
     productId: string
     rating: number | null
     comment: string | null
-    extraFields: Record<string, string | number | boolean>
     createdAt: string
     updatedAt: string
   }
@@ -139,7 +112,6 @@ interface NoteDetailResponse {
     vintage: string | null
     age: number | null
     volumeMl: number | null
-    extraFields: Record<string, string | number | boolean>
     createdAt: string
     updatedAt: string
   }

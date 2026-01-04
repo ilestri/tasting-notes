@@ -15,7 +15,6 @@ import { ref } from 'vue'
 import { navigateTo } from 'nuxt/app'
 import { useAdminToken } from '~/composables/useAdminToken'
 import type { NoteFormModel } from '~/types/noteForm'
-import { mapFromFields } from '~/utils/customFields'
 import { getErrorMessage } from '~/utils/errors'
 
 const token = useAdminToken()
@@ -33,12 +32,10 @@ const createForm = (): NoteFormModel => ({
     vintage: null,
     age: null,
     volume_ml: null,
-    extraFields: [],
   },
   note: {
     rating: null,
     comment: null,
-    extraFields: [],
   },
   terms: {
     nose: [],
@@ -67,14 +64,8 @@ const handleSubmit = async (payload: NoteFormModel) => {
   saving.value = true
   try {
     const body = {
-      product: {
-        ...payload.product,
-        extraFields: mapFromFields(payload.product.extraFields),
-      },
-      note: {
-        ...payload.note,
-        extraFields: mapFromFields(payload.note.extraFields),
-      },
+      product: payload.product,
+      note: payload.note,
       terms: payload.terms,
       tags: payload.tags,
       attachments: payload.attachments

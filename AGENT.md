@@ -34,7 +34,6 @@
 - `note_terms`로 향/맛/피니시/색 정규화
 - `tags` + `note_tags`
 - `attachments` (옵션)
-- 커스텀 필드: `extra_json`에 JSON 문자열(키→값)로 저장
 
 ## 스크립트
 
@@ -59,7 +58,6 @@
 
 ## 개발 시 주의
 
-- 커스텀 필드는 서버에서 JSON parse/stringify 처리
 - `DB_PATH` 기본 경로에 `data/` 디렉터리 필요
 
 ## 커밋 메시지 규칙

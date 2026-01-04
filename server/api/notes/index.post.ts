@@ -15,7 +15,6 @@ import {
   badRequest,
   normalizeAttachments,
   normalizeStringArray,
-  parseExtraFields,
   parseRating,
 } from '~/server/utils/validation'
 
@@ -77,14 +76,7 @@ export default defineEventHandler(async (event) => {
       ? productRecord.name.trim()
       : undefined
 
-  const productExtraSource = productRecord.extraFields ?? productRecord.productExtraFields
-  const productExtra =
-    productExtraSource === undefined ? null : parseExtraFields(productExtraSource)
-
   const rating = parseRating(noteRecord.rating)
-  const noteExtraSource = noteRecord.extraFields
-  const noteExtra = noteExtraSource === undefined ? null : parseExtraFields(noteExtraSource)
-
   const comment = typeof noteRecord.comment === 'string' ? noteRecord.comment.trim() : null
 
   const termsRecord = (termsInput && typeof termsInput === 'object' ? termsInput : {}) as Record<
@@ -146,7 +138,6 @@ export default defineEventHandler(async (event) => {
             productRecord.volume_ml === undefined
               ? existingProduct.volumeMl
               : parseOptionalNumber(productRecord.volume_ml, 'volume_ml', true),
-          extraJson: productExtra ? productExtra.json : existingProduct.extraJson,
           updatedAt: now,
         })
         .where(eq(products.id, newProductId))
@@ -163,7 +154,6 @@ export default defineEventHandler(async (event) => {
         vintage: parseOptionalText(productRecord.vintage, 'vintage') ?? null,
         age: parseOptionalNumber(productRecord.age, 'age', true),
         volumeMl: parseOptionalNumber(productRecord.volume_ml, 'volume_ml', true),
-        extraJson: productExtra?.json ?? null,
         createdAt: now,
         updatedAt: now,
       }
@@ -177,7 +167,6 @@ export default defineEventHandler(async (event) => {
       productId: newProductId,
       rating,
       comment: comment || null,
-      extraJson: noteExtra?.json ?? null,
       createdAt: now,
       updatedAt: now,
     }
