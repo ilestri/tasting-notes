@@ -103,6 +103,18 @@ export default defineEventHandler((event) => {
     .offset(offset)
     .all()
 
+  const tagCounts = db
+    .select({
+      name: tags.name,
+      count: sql<number>`count(${noteTags.noteId})`,
+    })
+    .from(tags)
+    .leftJoin(noteTags, eq(noteTags.tagId, tags.id))
+    .groupBy(tags.name)
+    .all()
+
+  const tagCountMap = new Map(tagCounts.map((row) => [row.name, row.count]))
+
   const noteIds = rows.map((row) => row.noteId)
   const tagRows = noteIds.length
     ? db
@@ -118,6 +130,14 @@ export default defineEventHandler((event) => {
     const current = tagMap.get(row.noteId) || []
     current.push(row.name)
     tagMap.set(row.noteId, current)
+  }
+
+  for (const [noteId, tagList] of tagMap) {
+    tagList.sort(
+      (a, b) =>
+        (tagCountMap.get(b) ?? 0) - (tagCountMap.get(a) ?? 0) || a.localeCompare(b),
+    )
+    tagMap.set(noteId, tagList)
   }
 
   const items = rows.map((row) => ({

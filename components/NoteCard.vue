@@ -2,9 +2,11 @@
   <NuxtLink class="note-card" :to="`/notes/${item.note.id}`">
     <header>
       <div>
-        <p class="eyebrow">{{ kindLabel(item.product.kind) }}</p>
+        <div class="note-meta-row">
+          <p class="eyebrow">{{ kindLabel(item.product.kind) }}</p>
+          <p v-if="item.product.producer" class="muted">{{ item.product.producer }}</p>
+        </div>
         <h3>{{ item.product.name }}</h3>
-        <p v-if="item.product.producer" class="muted">{{ item.product.producer }}</p>
       </div>
       <div
         v-if="item.note.rating !== null && item.note.rating !== undefined"
@@ -19,17 +21,23 @@
       </div>
     </header>
 
-    <p v-if="item.note.comment" class="note-comment">{{ item.note.comment }}</p>
+    <p v-if="item.note.comment" class="note-comment note-comment-clamp">
+      {{ item.note.comment }}
+    </p>
 
-    <div v-if="item.tags.length" class="chip-list">
-      <span v-for="tag in item.tags" :key="tag" class="chip small">{{ tag }}</span>
+    <div v-if="visibleTags.length" class="chip-list note-tags">
+      <span v-for="tag in visibleTags" :key="tag" class="chip small">{{ tag }}</span>
     </div>
   </NuxtLink>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { kindLabel } from '~/utils/kind'
-defineProps<{
+
+const MAX_TAGS = 3
+
+const props = defineProps<{
   item: {
     note: {
       id: string
@@ -44,4 +52,6 @@ defineProps<{
     tags: string[]
   }
 }>()
+
+const visibleTags = computed(() => props.item.tags.slice(0, MAX_TAGS))
 </script>
