@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink class="note-card" :to="`/notes/${item.note.id}`">
+  <NuxtLink class="note-card" :to="noteLink">
     <header>
       <div>
         <div class="note-meta-row">
@@ -33,6 +33,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { kindLabel } from '~/utils/kind'
 
 const MAX_TAGS = 3
@@ -52,6 +53,13 @@ const props = defineProps<{
     tags: string[]
   }
 }>()
+
+const route = useRoute()
+
+const noteLink = computed(() => ({
+  path: `/notes/${props.item.note.id}`,
+  query: route.query,
+}))
 
 const visibleTags = computed(() => props.item.tags.slice(0, MAX_TAGS))
 </script>

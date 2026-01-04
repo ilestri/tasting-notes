@@ -35,6 +35,10 @@
 - `tags` + `note_tags`
 - `attachments` (옵션)
 
+## 새 술 데이터 추가
+
+- 새 술을 DB에 넣을 때는 `docs/new-drink-insert-guide.md`를 먼저 참고
+
 ## 스크립트
 
 - `npm run dev`: 개발 서버

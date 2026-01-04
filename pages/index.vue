@@ -79,27 +79,81 @@ const toNumber = (value: string | null | undefined, fallback: number) => {
   return Number.isNaN(num) ? fallback : num
 }
 
-const filters = reactive({
-  q: (route.query.q as string) || '',
-  kind: (route.query.kind as string) || '',
-  tag: (route.query.tag as string) || '',
-  sort: (route.query.sort as string) || 'updatedAt',
-  order: (route.query.order as string) || 'desc',
-  page: toNumber(route.query.page as string, 1),
-  pageSize: toNumber(route.query.pageSize as string, 9),
+const getFiltersFromQuery = (query: typeof route.query) => ({
+  q: (query.q as string) || '',
+  kind: (query.kind as string) || '',
+  tag: (query.tag as string) || '',
+  sort: (query.sort as string) || 'updatedAt',
+  order: (query.order as string) || 'desc',
+  page: toNumber(query.page as string, 1),
+  pageSize: toNumber(query.pageSize as string, 9),
 })
+
+const filters = reactive(getFiltersFromQuery(route.query))
+
+const isSameFilters = (next: ReturnType<typeof getFiltersFromQuery>) =>
+  filters.q === next.q &&
+  filters.kind === next.kind &&
+  filters.tag === next.tag &&
+  filters.sort === next.sort &&
+  filters.order === next.order &&
+  filters.page === next.page &&
+  filters.pageSize === next.pageSize
 
 watch(
   () => route.query,
   (query) => {
-    filters.q = (query.q as string) || ''
-    filters.kind = (query.kind as string) || ''
-    filters.tag = (query.tag as string) || ''
-    filters.sort = (query.sort as string) || 'updatedAt'
-    filters.order = (query.order as string) || 'desc'
-    filters.page = toNumber(query.page as string, 1)
-    filters.pageSize = toNumber(query.pageSize as string, 9)
+    const next = getFiltersFromQuery(query)
+    if (!isSameFilters(next)) {
+      Object.assign(filters, next)
+    }
   },
+)
+
+const normalizeQuery = (query: Record<string, string | string[] | undefined>) => {
+  const normalized: Record<string, string> = {}
+  for (const [key, value] of Object.entries(query)) {
+    if (value === undefined) continue
+    if (Array.isArray(value)) {
+      if (value[0] !== undefined) normalized[key] = String(value[0])
+      continue
+    }
+    normalized[key] = String(value)
+  }
+  return normalized
+}
+
+const buildQueryFromFilters = () => ({
+  q: filters.q || undefined,
+  kind: filters.kind || undefined,
+  tag: filters.tag || undefined,
+  sort: filters.sort,
+  order: filters.order,
+  page: String(filters.page),
+  pageSize: String(filters.pageSize),
+})
+
+const isSameQuery = (
+  current: Record<string, string>,
+  next: Record<string, string>,
+) => {
+  const currentKeys = Object.keys(current)
+  const nextKeys = Object.keys(next)
+  if (currentKeys.length !== nextKeys.length) return false
+  return currentKeys.every((key) => current[key] === next[key])
+}
+
+watch(
+  filters,
+  () => {
+    const nextQuery = buildQueryFromFilters()
+    const current = normalizeQuery(route.query as Record<string, string | string[] | undefined>)
+    const next = normalizeQuery(nextQuery)
+    if (!isSameQuery(current, next)) {
+      router.replace({ query: nextQuery })
+    }
+  },
+  { deep: true },
 )
 
 const queryPayload = computed(() => ({

@@ -4,9 +4,11 @@
   <section v-else-if="data && data.product" class="detail">
     <header class="detail-header">
       <div>
-        <p class="eyebrow">{{ kindLabel(data.product.kind) }}</p>
+        <div class="note-meta-row">
+          <p class="eyebrow">{{ kindLabel(data.product.kind) }}</p>
+          <p v-if="data.product.producer" class="muted">{{ data.product.producer }}</p>
+        </div>
         <h1>{{ data.product.name }}</h1>
-        <p v-if="data.product.producer" class="muted">{{ data.product.producer }}</p>
       </div>
     </header>
 
@@ -56,8 +58,8 @@
             <p>{{ data.product.region || '-' }}</p>
           </div>
           <div>
-            <label>ABV</label>
-            <p>{{ data.product.abv ?? '-' }}</p>
+            <label>도수</label>
+            <p>{{ data.product.abv !== null ? `${data.product.abv}%` : '-' }}</p>
           </div>
           <div>
             <label>빈티지</label>
@@ -65,11 +67,11 @@
           </div>
           <div>
             <label>숙성</label>
-            <p>{{ data.product.age ?? '-' }}</p>
+            <p>{{ data.product.age !== null ? `${data.product.age}년` : 'NAS' }}</p>
           </div>
           <div>
             <label>용량</label>
-            <p>{{ data.product.volumeMl ?? '-' }}</p>
+            <p>{{ data.product.volumeMl !== null ? `${data.product.volumeMl}ml` : '-' }}</p>
           </div>
         </div>
         <div class="product-tags">

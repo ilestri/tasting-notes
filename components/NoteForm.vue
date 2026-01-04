@@ -34,7 +34,7 @@
           <input v-model="state.product.region" type="text" placeholder="지역" />
         </div>
         <div class="field">
-          <label>ABV (%)</label>
+          <label>도수 (%)</label>
           <input v-model.number="state.product.abv" type="number" step="0.1" min="0" max="100" />
         </div>
         <div class="field">
