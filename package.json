@@ -1,0 +1,32 @@
+{
+  "name": "tasting-notes",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "format": "prettier --write .",
+    "check": "prettier --check . && eslint . --ext .ts,.vue && nuxi typecheck",
+    "lint:fix": "npm run format && eslint . --ext .ts,.vue --fix",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "migrate": "drizzle-kit migrate",
+    "setup": "npm run migrate && npm run dev",
+    "start:prod": "npm run build && npm run start",
+    "start": "npm run migrate && node .output/server/index.mjs"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.10.0",
+    "drizzle-orm": "^0.36.4",
+    "nuxt": "^3.13.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.8",
+    "@nuxt/eslint-config": "^0.3.13",
+    "drizzle-kit": "^0.27.2",
+    "eslint": "^9.12.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.3.3"
+  }
+}
