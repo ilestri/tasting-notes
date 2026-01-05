@@ -1,35 +1,35 @@
 <template>
-  <section v-if="pending" class="loading">불러오는 중...</section>
-  <section v-else-if="error" class="error">{{ error.message }}</section>
-  <section v-else-if="data && data.product" class="detail">
-    <header class="detail-header">
+  <section v-if="pending" class="u-loading">불러오는 중...</section>
+  <section v-else-if="error" class="u-error">{{ error.message }}</section>
+  <section v-else-if="data && data.product" class="page-detail">
+    <header class="c-detail-header">
       <div>
-        <div class="note-meta-row">
-          <p class="eyebrow">{{ kindLabel(data.product.kind) }}</p>
-          <p v-if="data.product.producer" class="muted">{{ data.product.producer }}</p>
+        <div class="c-note-meta-row">
+          <p class="c-eyebrow">{{ kindLabel(data.product.kind) }}</p>
+          <p v-if="data.product.producer" class="u-muted">{{ data.product.producer }}</p>
         </div>
         <h1>{{ data.product.name }}</h1>
       </div>
     </header>
 
-    <section class="card">
+    <section class="c-card">
       <h2>평점/메모</h2>
-      <div class="rating-layout">
-        <div class="rating-block">
+      <div class="c-rating-layout">
+        <div class="c-rating-block">
           <label>평점</label>
           <p>{{ data.note.rating ?? '-' }}</p>
         </div>
-        <div class="comment-block">
+        <div class="c-comment-block">
           <label>메모</label>
-          <p v-if="data.note.comment" class="note-comment">{{ data.note.comment }}</p>
-          <p v-else class="muted">메모 없음</p>
+          <p v-if="data.note.comment" class="c-note-comment">{{ data.note.comment }}</p>
+          <p v-else class="u-muted">메모 없음</p>
         </div>
       </div>
     </section>
 
-    <section class="card">
+    <section class="c-card">
       <h2>향/맛/피니시/색</h2>
-      <div class="terms-grid">
+      <div class="c-terms-grid">
         <TermsList label="Nose" :items="data.terms.nose" />
         <TermsList label="Palate" :items="data.terms.palate" />
         <TermsList label="Finish" :items="data.terms.finish" />
@@ -37,18 +37,18 @@
       </div>
     </section>
 
-    <section class="card product-card">
-      <div class="product-media">
+    <section class="c-card c-product-card">
+      <div class="c-product-media">
         <img
           v-if="imageAttachment"
           :src="imageAttachment.urlOrPath"
           :alt="data.product?.name ? data.product.name + ' 이미지' : '첨부 이미지'"
         />
-        <p v-else class="muted">이미지 없음</p>
+        <p v-else class="u-muted">이미지 없음</p>
       </div>
-      <div class="product-info">
+      <div class="c-product-info">
         <h2>제품 정보</h2>
-        <div class="summary-grid">
+        <div class="c-summary-grid">
           <div>
             <label>국가</label>
             <p>{{ data.product.country || '-' }}</p>
@@ -74,12 +74,12 @@
             <p>{{ data.product.volumeMl !== null ? `${data.product.volumeMl}ml` : '-' }}</p>
           </div>
         </div>
-        <div class="product-tags">
-          <h2 class="product-tags-title">태그</h2>
-          <div v-if="data.tags.length" class="chip-list">
-            <span v-for="tag in data.tags" :key="tag" class="chip">{{ tag }}</span>
+        <div class="c-product-tags">
+          <h2 class="c-product-tags-title">태그</h2>
+          <div v-if="data.tags.length" class="c-chip-list">
+            <span v-for="tag in data.tags" :key="tag" class="c-chip">{{ tag }}</span>
           </div>
-          <p v-else class="muted">태그 없음</p>
+          <p v-else class="u-muted">태그 없음</p>
         </div>
       </div>
     </section>
@@ -149,94 +149,3 @@ const imageAttachment = computed(() => {
   return data.value.attachments.find((item) => item.kind === 'image') ?? null
 })
 </script>
-
-<style scoped>
-.product-card {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-  gap: 1.5rem;
-  align-items: start;
-}
-
-.product-media {
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 1rem;
-  background: #fff;
-  min-height: 320px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.product-media img {
-  width: 100%;
-  height: auto;
-  max-height: 520px;
-  object-fit: contain;
-}
-
-.product-info .summary-grid {
-  margin-top: 1rem;
-}
-
-.product-tags {
-  margin-top: 1.5rem;
-}
-
-.product-tags-title {
-  margin: 0 0 0.6rem 0;
-}
-
-.rating-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 160px) minmax(0, 1fr);
-  gap: 1.2rem;
-  align-items: start;
-  margin-top: 1rem;
-}
-
-.rating-block {
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 0.85rem;
-  text-align: center;
-  background: #fff;
-}
-
-.rating-block label {
-  display: block;
-  font-size: 0.75rem;
-  color: var(--muted);
-  margin-bottom: 0.35rem;
-}
-
-.rating-block p {
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-.comment-block label {
-  display: block;
-  font-size: 0.75rem;
-  color: var(--muted);
-  margin-bottom: 0.35rem;
-}
-
-.comment-block .note-comment {
-  margin: 0;
-}
-
-@media (max-width: 900px) {
-  .product-card {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 720px) {
-  .rating-layout {
-    grid-template-columns: 1fr;
-  }
-}
-</style>

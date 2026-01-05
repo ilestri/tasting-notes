@@ -1,16 +1,16 @@
 <template>
-  <section class="card lookup">
-    <header class="section-header">
+  <section class="c-card">
+    <header class="c-section-header">
       <h3>제품 불러오기</h3>
-      <p class="muted">기존 제품을 선택해 폼을 자동 채울 수 있습니다.</p>
+      <p class="u-muted">기존 제품을 선택해 폼을 자동 채울 수 있습니다.</p>
     </header>
 
-    <div class="lookup-controls">
-      <div class="field">
+    <div class="c-lookup-controls">
+      <div class="c-field">
         <label>검색</label>
         <input v-model="query" type="text" placeholder="제품명으로 검색" @keydown.enter.prevent />
       </div>
-      <div class="field">
+      <div class="c-field">
         <label>종류</label>
         <select v-model="kindFilter">
           <option value="">전체</option>
@@ -19,20 +19,20 @@
           </option>
         </select>
       </div>
-      <button class="ghost" type="button" @click="clearSelection">연결 해제</button>
+      <button class="u-ghost" type="button" @click="clearSelection">연결 해제</button>
     </div>
 
-    <p v-if="pending" class="muted">검색 중...</p>
-    <ul v-else class="lookup-list">
+    <p v-if="pending" class="u-muted">검색 중...</p>
+    <ul v-else class="c-lookup-list">
       <li v-for="item in results" :key="item.id">
         <button type="button" @click="selectProduct(item)">
           <strong>{{ item.name }}</strong>
           <span v-if="item.producer">· {{ item.producer }}</span>
-          <span class="muted">({{ kindLabel(item.kind) }})</span>
+          <span class="u-muted">({{ kindLabel(item.kind) }})</span>
         </button>
       </li>
     </ul>
-    <p v-if="!pending && query && !results.length" class="muted">검색 결과가 없습니다.</p>
+    <p v-if="!pending && query && !results.length" class="u-muted">검색 결과가 없습니다.</p>
   </section>
 </template>
 

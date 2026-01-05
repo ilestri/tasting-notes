@@ -1,22 +1,22 @@
 <template>
-  <div class="app-shell">
-    <header class="top-bar">
-      <div class="brand">
-        <NuxtLink :to="listLink" class="brand-mark">Tasting Notes</NuxtLink>
+  <div class="c-app-shell">
+    <header class="c-top-bar">
+      <div class="c-brand">
+        <NuxtLink :to="listLink" class="c-brand-mark">Tasting Notes</NuxtLink>
         <p>나의 술 이야기</p>
       </div>
-      <nav class="nav-links">
-        <NuxtLink :to="listLink" class="ghost">목록</NuxtLink>
-        <NuxtLink to="/stats" class="ghost">통계</NuxtLink>
-        <NuxtLink to="/notes/new" class="primary">새 노트</NuxtLink>
+      <nav class="c-nav-links">
+        <NuxtLink :to="listLink" class="u-ghost">목록</NuxtLink>
+        <NuxtLink to="/stats" class="u-ghost">통계</NuxtLink>
+        <NuxtLink to="/notes/new" class="u-primary">새 노트</NuxtLink>
       </nav>
     </header>
 
-    <main class="main-content">
+    <main class="c-main-content">
       <slot />
     </main>
 
-    <footer class="footer">
+    <footer class="c-footer">
       <p>푸터자리</p>
     </footer>
   </div>

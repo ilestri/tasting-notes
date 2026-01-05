@@ -1,3 +1,4 @@
+/* 루트 토큰 */
 :root {
   color-scheme: light;
   --bg: #f6f1ea;
@@ -13,6 +14,14 @@
   --font-body: 'Space Grotesk', sans-serif;
 }
 
+/* 네이밍 규칙:
+ * - 페이지 래퍼: .page-<name>
+ * - 페이지 전용 스타일은 페이지 래퍼 아래에 중첩한다.
+ * - 컴포넌트 블록: .c-card, .c-section-header, .c-note-card 등
+ * - 유틸리티: .u-muted, .u-loading, .u-error, .u-empty, .u-ghost, .u-primary
+ */
+
+/* 기본 리셋 */
 * {
   box-sizing: border-box;
 }
@@ -44,16 +53,42 @@ p {
   margin: 0;
 }
 
-.muted {
+/* 유틸리티 */
+.u-muted {
   color: var(--muted);
 }
 
-.error {
+.u-error {
   color: #c03b2f;
   margin-top: 1rem;
 }
 
-.app-shell {
+.u-loading,
+.u-empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 2rem 0;
+}
+
+button.u-primary,
+a.u-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: #fff;
+  border: none;
+  padding: 0.65rem 1.2rem;
+  box-shadow: 0 10px 20px rgba(139, 59, 21, 0.25);
+}
+
+button.u-ghost,
+a.u-ghost {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 0.55rem 1rem;
+}
+
+/* 레이아웃 */
+.c-app-shell {
   max-width: 1100px;
   margin: 0 auto;
   padding: 2rem 1.5rem 3rem;
@@ -62,7 +97,7 @@ p {
   gap: 2rem;
 }
 
-.top-bar {
+.c-top-bar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -70,24 +105,24 @@ p {
   gap: 1.5rem;
 }
 
-.brand {
+.c-brand {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
 }
 
-.brand-mark {
+.c-brand-mark {
   font-family: var(--font-display);
   font-size: 1.8rem;
 }
 
-.nav-links {
+.c-nav-links {
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
 }
 
-.token-panel {
+.c-token-panel {
   background: rgba(255, 255, 255, 0.6);
   border: 1px dashed var(--line);
   border-radius: 16px;
@@ -95,30 +130,31 @@ p {
   backdrop-filter: blur(6px);
 }
 
-.token-field label {
+.c-token-field label {
   font-weight: 600;
   font-size: 0.85rem;
 }
 
-.token-input {
+.c-token-input {
   display: flex;
   gap: 0.5rem;
   align-items: center;
 }
 
-.main-content {
+.c-main-content {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
-.footer {
+.c-footer {
   text-align: center;
   font-size: 0.9rem;
   color: var(--muted);
 }
 
-.card {
+/* 컴포넌트 */
+.c-card {
   background: var(--card);
   border-radius: 20px;
   padding: 1.5rem;
@@ -126,14 +162,14 @@ p {
   border: 1px solid rgba(31, 27, 22, 0.08);
 }
 
-.section-header {
+.c-section-header {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
   margin-bottom: 1.2rem;
 }
 
-.page-header {
+.c-page-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -157,61 +193,31 @@ button {
   cursor: pointer;
 }
 
-button.primary,
-a.primary {
-  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-  color: #fff;
-  border: none;
-  padding: 0.65rem 1.2rem;
-  box-shadow: 0 10px 20px rgba(139, 59, 21, 0.25);
-}
-
-button.ghost,
-a.ghost {
-  background: transparent;
-  border: 1px solid var(--line);
-  color: var(--ink);
-  padding: 0.55rem 1rem;
-}
-
 button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-.field {
+.c-field {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
 }
 
-.form-grid {
+.c-form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
 }
 
-.filters-grid {
+.c-lookup-controls {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1rem;
   align-items: end;
 }
 
-.filters-actions {
-  display: flex;
-  gap: 0.75rem;
-  align-items: center;
-}
-
-.lookup-controls {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1rem;
-  align-items: end;
-}
-
-.lookup-list {
+.c-lookup-list {
   list-style: none;
   padding: 0;
   margin: 0.5rem 0 0;
@@ -219,7 +225,7 @@ button:disabled {
   gap: 0.5rem;
 }
 
-.lookup-list button {
+.c-lookup-list button {
   width: 100%;
   text-align: left;
   background: #fff;
@@ -228,34 +234,7 @@ button:disabled {
   padding: 0.6rem 0.8rem;
 }
 
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-}
-
-.stats-grid ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: 0.5rem;
-}
-
-.stats-grid li {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.notes-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1rem;
-}
-
-.note-card {
+.c-note-card {
   background: #fff;
   border-radius: 18px;
   padding: 1.25rem;
@@ -271,55 +250,55 @@ button:disabled {
     border-color 0.18s ease;
 }
 
-.note-card:hover,
-.note-card:focus-visible {
+.c-note-card:hover,
+.c-note-card:focus-visible {
   transform: translateY(-4px);
   border-color: rgba(197, 111, 45, 0.4);
   box-shadow: 0 16px 26px rgba(31, 27, 22, 0.16);
 }
 
-.note-card header {
+.c-note-card header {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
 }
 
-.note-card header > div {
+.c-note-card header > div {
   min-width: 0;
 }
 
-.note-meta-row {
+.c-note-meta-row {
   display: flex;
   align-items: center;
   gap: 0.7rem;
   flex-wrap: wrap;
 }
 
-.note-meta-row .muted::before {
+.c-note-meta-row .u-muted::before {
   content: '·';
   margin-right: 0.4rem;
   color: var(--muted);
 }
 
-.note-meta-row .muted {
+.c-note-meta-row .u-muted {
   font-size: 0.85rem;
 }
 
-.note-card h3 {
+.c-note-card h3 {
   margin: 0.55rem 0 0.2rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.eyebrow {
+.c-eyebrow {
   text-transform: uppercase;
   font-size: 0.75rem;
   letter-spacing: 0.1em;
   color: var(--muted);
 }
 
-.rating-badge {
+.c-rating-badge {
   --rating: 0;
   --rating-percent: clamp(0%, calc(var(--rating) * 10%), 100%);
   width: 64px;
@@ -339,7 +318,7 @@ button:disabled {
   box-shadow: 0 12px 20px rgba(31, 27, 22, 0.16);
 }
 
-.rating-badge::after {
+.c-rating-badge::after {
   content: '';
   position: absolute;
   inset: 6px;
@@ -350,7 +329,7 @@ button:disabled {
   backdrop-filter: blur(6px);
 }
 
-.rating-text {
+.c-rating-text {
   position: relative;
   z-index: 1;
   display: flex;
@@ -358,33 +337,28 @@ button:disabled {
   gap: 0.1rem;
 }
 
-.rating-value {
+.c-rating-value {
   font-family: var(--font-display);
   font-size: 1.05rem;
   font-weight: 600;
   color: var(--accent-strong);
 }
 
-.rating-unit {
+.c-rating-unit {
   font-size: 0.65rem;
   color: var(--muted);
 }
 
-.note-meta {
-  font-size: 0.85rem;
-  color: var(--muted);
-}
-
-.note-comment {
+.c-note-comment {
   font-size: 0.95rem;
   line-height: 1.45;
 }
 
-.note-card header + .note-comment {
+.c-note-card header + .c-note-comment {
   margin-top: -0.2rem;
 }
 
-.note-card .note-comment-clamp {
+.c-note-card .c-note-comment-clamp {
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -392,25 +366,25 @@ button:disabled {
   min-height: calc(1.45em * 3);
 }
 
-.note-tags {
+.c-note-tags {
   flex-wrap: nowrap;
   overflow: hidden;
 }
 
-.note-tags .chip {
+.c-note-tags .c-chip {
   max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.chip-list {
+.c-chip-list {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
 }
 
-.chip {
+.c-chip {
   background: rgba(197, 111, 45, 0.12);
   color: var(--accent-strong);
   border-radius: 999px;
@@ -421,82 +395,88 @@ button:disabled {
   gap: 0.3rem;
 }
 
-.chip.small {
+.c-chip.u-small {
   font-size: 0.75rem;
 }
 
-.chip button {
+.c-chip button {
   border: none;
   background: transparent;
   cursor: pointer;
   font-size: 0.9rem;
 }
 
-.loading,
-.empty {
-  text-align: center;
-  color: var(--muted);
-  padding: 2rem 0;
-}
-
-.note-form {
+.c-note-form {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
-.field-grid {
+.c-field-grid {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.field-row {
+.c-field-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)) auto;
   gap: 0.8rem;
   align-items: end;
 }
 
-.checkbox {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-top: 0.4rem;
-}
-
-.terms-grid {
+.c-terms-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1rem;
   margin-top: 1rem;
 }
 
-.terms-editor {
+.c-terms-editor {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
 
-.terms-header h4 {
+.c-terms-header h4 {
   margin-bottom: 0.25rem;
 }
 
-.terms-list h4 {
+.c-terms-list h4 {
   margin-bottom: 0.5rem;
 }
 
-.terms-input {
+.c-terms-input {
   display: flex;
   gap: 0.5rem;
 }
 
-.form-actions {
+.c-form-actions {
   display: flex;
   justify-content: flex-end;
 }
 
-.pagination {
+.c-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+/* 페이지 */
+.page-notes .c-filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  align-items: end;
+}
+
+.page-notes .c-notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.page-notes .c-pagination {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -504,11 +484,12 @@ button:disabled {
   margin-top: 2rem;
 }
 
-.notes-section {
+.page-notes .c-notes-section {
   margin-top: 1rem;
 }
 
-.detail-header {
+/* 노트 상세 페이지 */
+.page-detail .c-detail-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -516,36 +497,220 @@ button:disabled {
   flex-wrap: wrap;
 }
 
-.detail-actions {
-  display: flex;
-  gap: 0.75rem;
-}
-
-.attachments {
+.page-detail .c-product-card {
   display: grid;
-  gap: 1rem;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
 }
 
-.attachment-item {
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  gap: 1rem;
-  align-items: center;
-}
-
-.attachment-item img {
-  width: 100%;
-  border-radius: 12px;
-  object-fit: cover;
+.page-detail .c-product-media {
   border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1rem;
+  background: #fff;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.summary-grid {
+.page-detail .c-product-media img {
+  width: 100%;
+  height: auto;
+  max-height: 520px;
+  object-fit: contain;
+}
+
+.page-detail .c-product-info .c-summary-grid {
+  margin-top: 1rem;
+}
+
+.page-detail .c-product-tags {
+  margin-top: 1.5rem;
+}
+
+.page-detail .c-product-tags-title {
+  margin: 0 0 0.6rem 0;
+}
+
+.page-detail .c-rating-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 160px) minmax(0, 1fr);
+  gap: 1.2rem;
+  align-items: start;
+  margin-top: 1rem;
+}
+
+.page-detail .c-rating-block {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.85rem;
+  text-align: center;
+  background: #fff;
+}
+
+.page-detail .c-rating-block label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+
+.page-detail .c-rating-block p {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.page-detail .c-comment-block label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+
+.page-detail .c-comment-block .c-note-comment {
+  margin: 0;
+}
+
+/* 통계 페이지 */
+.page-stats {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.page-stats .c-stats-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.page-stats .c-stats-hero::after {
+  content: '';
+  position: absolute;
+  inset: auto -20% -40% -20%;
+  height: 180px;
+  background: radial-gradient(circle, rgba(197, 111, 45, 0.15), transparent 70%);
+  pointer-events: none;
+}
+
+.page-stats .c-stats-badge {
+  font-size: 0.85rem;
+  color: var(--accent-strong);
+  background: rgba(197, 111, 45, 0.12);
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  align-self: flex-start;
+}
+
+.page-stats .c-stats-summary {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1rem;
+  position: relative;
+  z-index: 1;
 }
 
+.page-stats .c-stat-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1rem 1.1rem;
+  display: grid;
+  gap: 0.4rem;
+  min-height: 110px;
+}
+
+.page-stats .c-stat-label {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.page-stats .c-stat-value {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+}
+
+.page-stats .c-stat-unit {
+  font-size: 0.95rem;
+  margin-left: 0.25rem;
+  color: var(--muted);
+}
+
+.page-stats .c-stat-sub {
+  font-size: 0.85rem;
+}
+
+.page-stats .c-stats-panels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.page-stats .c-panel-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.page-stats .c-panel-hint {
+  font-size: 0.8rem;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+}
+
+.page-stats .c-stat-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.page-stats .c-stat-row {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.page-stats .c-stat-row-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.page-stats .c-stat-row-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.page-stats .c-stat-bar {
+  height: 8px;
+  background: rgba(197, 111, 45, 0.12);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.page-stats .c-stat-bar-fill {
+  display: block;
+  height: 100%;
+  width: var(--value);
+  min-width: 10px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+/* 애니메이션 */
 @keyframes fade-up {
   from {
     opacity: 0;
@@ -557,23 +722,35 @@ button:disabled {
   }
 }
 
+/* 반응형 */
+@media (max-width: 900px) {
+  .page-detail .c-product-card {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 768px) {
-  .top-bar {
+  .c-top-bar {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .token-input {
+  .c-token-input {
     flex-direction: column;
     align-items: stretch;
   }
+}
 
-  .filters-actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .attachment-item {
+@media (max-width: 720px) {
+  .page-detail .c-rating-layout {
     grid-template-columns: 1fr;
+  }
+
+  .page-stats .c-stat-card {
+    min-height: auto;
+  }
+
+  .page-stats .c-stat-value {
+    font-size: 1.4rem;
   }
 }

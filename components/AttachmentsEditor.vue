@@ -1,20 +1,20 @@
 <template>
-  <section class="card">
-    <header class="section-header">
+  <section class="c-card">
+    <header class="c-section-header">
       <h3>첨부 파일</h3>
-      <p class="muted">이미지 URL 또는 파일 경로를 기록합니다.</p>
+      <p class="u-muted">이미지 URL 또는 파일 경로를 기록합니다.</p>
     </header>
 
-    <div class="field-grid">
-      <div v-for="(attachment, index) in attachments" :key="index" class="field-row">
-        <div class="field">
+    <div class="c-field-grid">
+      <div v-for="(attachment, index) in attachments" :key="index" class="c-field-row">
+        <div class="c-field">
           <label>종류</label>
           <select v-model="attachment.kind" @change="emitChange">
             <option value="image">Image</option>
             <option value="file">File</option>
           </select>
         </div>
-        <div class="field">
+        <div class="c-field">
           <label>URL/Path</label>
           <input
             v-model="attachment.url_or_path"
@@ -22,9 +22,9 @@
             placeholder="https://... 또는 /path/file"
             @input="emitChange"
           />
-          <p v-if="!attachment.url_or_path.trim()" class="error">경로를 입력하세요.</p>
+          <p v-if="!attachment.url_or_path.trim()" class="u-error">경로를 입력하세요.</p>
         </div>
-        <div class="field">
+        <div class="c-field">
           <label>MIME (선택)</label>
           <input
             v-model="attachment.mime"
@@ -33,11 +33,11 @@
             @input="emitChange"
           />
         </div>
-        <button class="ghost" type="button" @click="removeAttachment(index)">삭제</button>
+        <button class="u-ghost" type="button" @click="removeAttachment(index)">삭제</button>
       </div>
     </div>
 
-    <button class="primary" type="button" @click="addAttachment">+ 첨부 추가</button>
+    <button class="u-primary" type="button" @click="addAttachment">+ 첨부 추가</button>
   </section>
 </template>
 

@@ -1,12 +1,12 @@
 <template>
-  <div>
-    <section class="card filters">
-      <form class="filters-grid" @submit.prevent="applyFilters">
-        <div class="field">
+  <div class="page-notes">
+    <section class="c-card">
+      <form class="c-filters-grid" @submit.prevent="applyFilters">
+        <div class="c-field">
           <label>검색</label>
           <input v-model="filters.q" type="text" placeholder="제품명, 생산자, 코멘트" />
         </div>
-        <div class="field">
+        <div class="c-field">
           <label>종류</label>
           <select v-model="filters.kind">
             <option value="">전체</option>
@@ -15,21 +15,21 @@
             </option>
           </select>
         </div>
-        <div class="field">
+        <div class="c-field">
           <label>태그</label>
-          <input v-model="filters.tag" type="text" placeholder="#peat #smoky" list="tag-options" />
+          <input v-model="filters.tag" type="text" placeholder="#피트 #스모키" list="tag-options" />
           <datalist id="tag-options">
             <option v-for="tag in tagsOptions" :key="tag.name" :value="tag.name"></option>
           </datalist>
         </div>
-        <div class="field">
+        <div class="c-field">
           <label>정렬</label>
           <select v-model="filters.sort">
             <option value="updatedAt">최근 수정</option>
             <option value="rating">평점</option>
           </select>
         </div>
-        <div class="field">
+        <div class="c-field">
           <label>순서</label>
           <select v-model="filters.order">
             <option value="desc">내림차순</option>
@@ -39,21 +39,21 @@
       </form>
     </section>
 
-    <section v-if="pending" class="loading">불러오는 중...</section>
-    <section v-else-if="error" class="error">{{ error.message }}</section>
-    <section v-else class="notes-section">
-      <div v-if="!data?.items.length" class="empty">아직 노트가 없습니다.</div>
-      <div v-else class="notes-grid">
+    <section v-if="pending" class="u-loading">불러오는 중...</section>
+    <section v-else-if="error" class="u-error">{{ error.message }}</section>
+    <section v-else class="c-notes-section">
+      <div v-if="!data?.items.length" class="u-empty">아직 노트가 없습니다.</div>
+      <div v-else class="c-notes-grid">
         <NoteCard v-for="item in data.items" :key="item.note.id" :item="item" />
       </div>
 
-      <div v-if="data?.total" class="pagination">
-        <button class="ghost" :disabled="filters.page <= 1" @click="goToPage(filters.page - 1)">
+      <div v-if="data?.total" class="c-pagination">
+        <button class="u-ghost" :disabled="filters.page <= 1" @click="goToPage(filters.page - 1)">
           이전
         </button>
         <span>{{ filters.page }} / {{ totalPages }}</span>
         <button
-          class="ghost"
+          class="u-ghost"
           :disabled="filters.page >= totalPages"
           @click="goToPage(filters.page + 1)"
         >

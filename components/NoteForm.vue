@@ -1,15 +1,15 @@
 <template>
-  <form class="note-form" @submit.prevent="submit">
+  <form class="c-note-form" @submit.prevent="submit">
     <ProductLookup @select="applyProduct" @clear="clearProduct" />
 
-    <section class="card">
-      <header class="section-header">
+    <section class="c-card">
+      <header class="c-section-header">
         <h2>제품 정보</h2>
-        <p class="muted">제품 기본 정보를 먼저 기록하세요.</p>
+        <p class="u-muted">제품 기본 정보를 먼저 기록하세요.</p>
       </header>
 
-      <div class="form-grid">
-        <div class="field">
+      <div class="c-form-grid">
+        <div class="c-field">
           <label>종류</label>
           <select v-model="state.product.kind">
             <option v-for="option in kindOptions" :key="option.value" :value="option.value">
@@ -17,60 +17,60 @@
             </option>
           </select>
         </div>
-        <div class="field">
+        <div class="c-field">
           <label>이름</label>
           <input v-model="state.product.name" type="text" required placeholder="제품명" />
         </div>
-        <div class="field">
+        <div class="c-field">
           <label>생산자</label>
           <input v-model="state.product.producer" type="text" placeholder="증류소/와이너리" />
         </div>
-        <div class="field">
+        <div class="c-field">
           <label>국가</label>
           <input v-model="state.product.country" type="text" placeholder="국가" />
         </div>
-        <div class="field">
+        <div class="c-field">
           <label>지역</label>
           <input v-model="state.product.region" type="text" placeholder="지역" />
         </div>
-        <div class="field">
+        <div class="c-field">
           <label>도수 (%)</label>
           <input v-model.number="state.product.abv" type="number" step="0.1" min="0" max="100" />
         </div>
-        <div class="field">
+        <div class="c-field">
           <label>빈티지</label>
           <input v-model="state.product.vintage" type="text" placeholder="예: 2019" />
         </div>
-        <div class="field">
+        <div class="c-field">
           <label>숙성 연수</label>
           <input v-model.number="state.product.age" type="number" step="1" min="0" />
         </div>
-        <div class="field">
+        <div class="c-field">
           <label>용량(ml)</label>
           <input v-model.number="state.product.volume_ml" type="number" step="1" min="0" />
         </div>
       </div>
     </section>
 
-    <section class="card">
-      <header class="section-header">
+    <section class="c-card">
+      <header class="c-section-header">
         <h2>노트</h2>
-        <p class="muted">평점과 인상, 향/맛/피니시를 기록하세요.</p>
+        <p class="u-muted">평점과 인상, 향/맛/피니시를 기록하세요.</p>
       </header>
 
-      <div class="form-grid">
-        <div class="field">
+      <div class="c-form-grid">
+        <div class="c-field">
           <label>평점 (0~10, 0.5 단위)</label>
           <input v-model.number="state.note.rating" type="number" step="0.5" min="0" max="10" />
         </div>
       </div>
 
-      <div class="field">
+      <div class="c-field">
         <label>코멘트</label>
         <textarea v-model="state.note.comment" rows="4" placeholder="인상/메모"></textarea>
       </div>
 
-      <div class="terms-grid">
+      <div class="c-terms-grid">
         <TermsEditor v-model="state.terms.nose" label="Nose" placeholder="향 키워드" />
         <TermsEditor v-model="state.terms.palate" label="Palate" placeholder="맛 키워드" />
         <TermsEditor v-model="state.terms.finish" label="Finish" placeholder="피니시 키워드" />
@@ -78,10 +78,10 @@
       </div>
     </section>
 
-    <section class="card">
-      <header class="section-header">
+    <section class="c-card">
+      <header class="c-section-header">
         <h2>태그</h2>
-        <p class="muted">노트에 사용할 태그를 추가하세요.</p>
+        <p class="u-muted">노트에 사용할 태그를 추가하세요.</p>
       </header>
       <TermsEditor
         v-model="state.tags"
@@ -93,10 +93,10 @@
 
     <AttachmentsEditor v-model="state.attachments" />
 
-    <div class="form-actions">
-      <button class="primary" type="submit" :disabled="busy">{{ submitLabel }}</button>
+    <div class="c-form-actions">
+      <button class="u-primary" type="submit" :disabled="busy">{{ submitLabel }}</button>
     </div>
-    <p v-if="formError" class="error">{{ formError }}</p>
+    <p v-if="formError" class="u-error">{{ formError }}</p>
   </form>
 </template>
 

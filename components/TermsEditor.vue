@@ -1,17 +1,17 @@
 <template>
-  <div class="terms-editor">
-    <div class="terms-header">
+  <div class="c-terms-editor">
+    <div class="c-terms-header">
       <h4>{{ label }}</h4>
-      <p v-if="hint" class="muted">{{ hint }}</p>
+      <p v-if="hint" class="u-muted">{{ hint }}</p>
     </div>
 
-    <div class="terms-input">
+    <div class="c-terms-input">
       <input v-model="draft" type="text" :placeholder="placeholder" @keydown.enter.prevent="add" />
-      <button class="ghost" type="button" @click="add">추가</button>
+      <button class="u-ghost" type="button" @click="add">추가</button>
     </div>
 
-    <div v-if="items.length" class="chip-list">
-      <span v-for="(item, index) in items" :key="item + index" class="chip">
+    <div v-if="items.length" class="c-chip-list">
+      <span v-for="(item, index) in items" :key="item + index" class="c-chip">
         {{ item }}
         <button type="button" @click="remove(index)">×</button>
       </span>

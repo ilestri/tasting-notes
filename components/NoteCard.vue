@@ -1,32 +1,32 @@
 <template>
-  <NuxtLink class="note-card" :to="noteLink">
+  <NuxtLink class="c-note-card" :to="noteLink">
     <header>
       <div>
-        <div class="note-meta-row">
-          <p class="eyebrow">{{ kindLabel(item.product.kind) }}</p>
-          <p v-if="item.product.producer" class="muted">{{ item.product.producer }}</p>
+        <div class="c-note-meta-row">
+          <p class="c-eyebrow">{{ kindLabel(item.product.kind) }}</p>
+          <p v-if="item.product.producer" class="u-muted">{{ item.product.producer }}</p>
         </div>
         <h3>{{ item.product.name }}</h3>
       </div>
       <div
         v-if="item.note.rating !== null && item.note.rating !== undefined"
-        class="rating-badge"
+        class="c-rating-badge"
         :style="{ '--rating': item.note.rating }"
         :aria-label="`평점 ${item.note.rating.toFixed(1)}점`"
       >
-        <div class="rating-text">
-          <span class="rating-value">{{ item.note.rating.toFixed(1) }}</span>
-          <span class="rating-unit">점</span>
+        <div class="c-rating-text">
+          <span class="c-rating-value">{{ item.note.rating.toFixed(1) }}</span>
+          <span class="c-rating-unit">점</span>
         </div>
       </div>
     </header>
 
-    <p v-if="item.note.comment" class="note-comment note-comment-clamp">
+    <p v-if="item.note.comment" class="c-note-comment c-note-comment-clamp">
       {{ item.note.comment }}
     </p>
 
-    <div v-if="visibleTags.length" class="chip-list note-tags">
-      <span v-for="tag in visibleTags" :key="tag" class="chip small">{{ tag }}</span>
+    <div v-if="visibleTags.length" class="c-chip-list c-note-tags">
+      <span v-for="tag in visibleTags" :key="tag" class="c-chip u-small">{{ tag }}</span>
     </div>
   </NuxtLink>
 </template>

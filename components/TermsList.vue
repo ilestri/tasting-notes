@@ -1,10 +1,10 @@
 <template>
-  <div class="terms-list">
+  <div class="c-terms-list">
     <h4>{{ label }}</h4>
-    <div v-if="items.length" class="chip-list">
-      <span v-for="item in items" :key="item" class="chip">{{ item }}</span>
+    <div v-if="items.length" class="c-chip-list">
+      <span v-for="item in items" :key="item" class="c-chip">{{ item }}</span>
     </div>
-    <p v-else class="muted">-</p>
+    <p v-else class="u-muted">-</p>
   </div>
 </template>
 

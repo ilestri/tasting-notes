@@ -1,11 +1,11 @@
 <template>
-  <section v-if="pending" class="loading">불러오는 중...</section>
-  <section v-else-if="error" class="error">{{ error.message }}</section>
+  <section v-if="pending" class="u-loading">불러오는 중...</section>
+  <section v-else-if="error" class="u-error">{{ error.message }}</section>
   <section v-else>
-    <section class="page-header">
+    <section class="c-page-header">
       <div>
         <h1>노트 수정</h1>
-        <p class="muted">기록을 업데이트합니다.</p>
+        <p class="u-muted">기록을 업데이트합니다.</p>
       </div>
     </section>
 
@@ -17,7 +17,7 @@
       @submit="handleSubmit"
     />
 
-    <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+    <p v-if="errorMessage" class="u-error">{{ errorMessage }}</p>
   </section>
 </template>
 

@@ -1,12 +1,12 @@
 <template>
   <div>
-    <section class="token-panel">
+    <section class="c-token-panel">
       <AdminTokenField />
     </section>
 
     <NoteForm :initial="form" submit-label="저장" :busy="saving" @submit="handleSubmit" />
 
-    <p v-if="error" class="error">{{ error }}</p>
+    <p v-if="error" class="u-error">{{ error }}</p>
   </div>
 </template>
 
