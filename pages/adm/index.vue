@@ -19,7 +19,14 @@
         </div>
 
         <form class="c-admin-search" @submit.prevent="applySearch">
-          <input v-model="search" type="text" placeholder="이름/생산자/코멘트 검색" />
+          <input
+            v-model="search"
+            type="text"
+            placeholder="이름/생산자/코멘트 검색"
+            @input="onSearchInput"
+            @compositionupdate="onSearchCompositionUpdate"
+            @compositionend="onSearchCompositionEnd"
+          />
           <button class="u-ghost" type="submit">검색</button>
         </form>
 
@@ -124,10 +131,30 @@
           <section>
             <h3>향/맛/피니시/색</h3>
             <div class="c-terms-grid">
-              <TermsEditor v-model="form.terms.nose" label="Nose" placeholder="향 키워드" />
-              <TermsEditor v-model="form.terms.palate" label="Palate" placeholder="맛 키워드" />
-              <TermsEditor v-model="form.terms.finish" label="Finish" placeholder="피니시 키워드" />
-              <TermsEditor v-model="form.terms.color" label="Color" placeholder="색 키워드" />
+              <TermsEditor
+                v-model="form.terms.nose"
+                label="Nose"
+                placeholder="향 키워드"
+                :suggestions="suggestions.terms.nose"
+              />
+              <TermsEditor
+                v-model="form.terms.palate"
+                label="Palate"
+                placeholder="맛 키워드"
+                :suggestions="suggestions.terms.palate"
+              />
+              <TermsEditor
+                v-model="form.terms.finish"
+                label="Finish"
+                placeholder="피니시 키워드"
+                :suggestions="suggestions.terms.finish"
+              />
+              <TermsEditor
+                v-model="form.terms.color"
+                label="Color"
+                placeholder="색 키워드"
+                :suggestions="suggestions.terms.color"
+              />
             </div>
           </section>
 
@@ -138,6 +165,7 @@
               label="태그"
               placeholder="태그"
               hint="콤마 없이 하나씩 추가"
+              :suggestions="suggestions.tags"
             />
           </section>
 
@@ -310,6 +338,16 @@ interface NoteDetailResponse {
   }>
 }
 
+interface AdminSuggestionsResponse {
+  terms: {
+    nose: string[]
+    palate: string[]
+    finish: string[]
+    color: string[]
+  }
+  tags: string[]
+}
+
 const fetchNotes = () =>
   $fetch<NotesListResponse>('/api/notes' as string, {
     query: listQuery.value as Record<string, string | number | undefined>,
@@ -322,6 +360,14 @@ const { error: authError } = await useAsyncData('admin-auth', () =>
 if (authError.value) {
   await navigateTo('/adm/login')
 }
+
+const { data: suggestionData } = await useAsyncData<AdminSuggestionsResponse>(
+  'admin-suggestions',
+  () =>
+    $fetch<AdminSuggestionsResponse>('/api/admin/suggestions' as string, {
+      headers: useRequestHeaders(['cookie']),
+    }),
+)
 
 const {
   data: listData,
@@ -337,8 +383,39 @@ const totalPages = computed(() => {
   return Math.max(1, Math.ceil(total / 9))
 })
 
+const suggestions = computed<AdminSuggestionsResponse>(() => ({
+  terms: {
+    nose: suggestionData.value?.terms.nose ?? [],
+    palate: suggestionData.value?.terms.palate ?? [],
+    finish: suggestionData.value?.terms.finish ?? [],
+    color: suggestionData.value?.terms.color ?? [],
+  },
+  tags: suggestionData.value?.tags ?? [],
+}))
+
 const applySearch = () => {
   appliedSearch.value = search.value.trim()
+  page.value = 1
+}
+
+const onSearchInput = (event: Event) => {
+  const value = (event.target as { value?: string } | null)?.value ?? ''
+  search.value = value
+  appliedSearch.value = value.trim()
+  page.value = 1
+}
+
+const onSearchCompositionUpdate = (event: Event) => {
+  const value = (event.target as { value?: string } | null)?.value ?? ''
+  search.value = value
+  appliedSearch.value = value.trim()
+  page.value = 1
+}
+
+const onSearchCompositionEnd = (event: Event) => {
+  const value = (event.target as { value?: string } | null)?.value ?? ''
+  search.value = value
+  appliedSearch.value = value.trim()
   page.value = 1
 }
 

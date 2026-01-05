@@ -1,0 +1,31 @@
+import { db } from '~/server/db'
+import { noteTerms, tags } from '~/server/db/schema'
+
+export default defineEventHandler(() => {
+  const termRows = db
+    .select({ category: noteTerms.category, value: noteTerms.value })
+    .from(noteTerms)
+    .groupBy(noteTerms.category, noteTerms.value)
+    .orderBy(noteTerms.category, noteTerms.value)
+    .all()
+
+  const tagRows = db.select({ name: tags.name }).from(tags).orderBy(tags.name).all()
+
+  const terms = {
+    nose: [] as string[],
+    palate: [] as string[],
+    finish: [] as string[],
+    color: [] as string[],
+  }
+
+  termRows.forEach((row) => {
+    if (row.category in terms) {
+      terms[row.category as keyof typeof terms].push(row.value)
+    }
+  })
+
+  return {
+    terms,
+    tags: tagRows.map((row) => row.name),
+  }
+})
