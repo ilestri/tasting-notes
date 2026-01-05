@@ -8,7 +8,7 @@
         </div>
         <div class="c-field">
           <label>종류</label>
-          <select v-model="filters.kind">
+          <select v-model="filters.kind" @change="applyFilters">
             <option value="">전체</option>
             <option v-for="option in kindOptions" :key="option.value" :value="option.value">
               {{ option.label }}
@@ -24,14 +24,14 @@
         </div>
         <div class="c-field">
           <label>정렬</label>
-          <select v-model="filters.sort">
+          <select v-model="filters.sort" @change="applyFilters">
             <option value="updatedAt">최근 수정</option>
             <option value="rating">평점</option>
           </select>
         </div>
         <div class="c-field">
           <label>순서</label>
-          <select v-model="filters.order">
+          <select v-model="filters.order" @change="applyFilters">
             <option value="desc">내림차순</option>
             <option value="asc">오름차순</option>
           </select>
@@ -48,14 +48,18 @@
       </div>
 
       <div v-if="data?.total" class="c-pagination">
-        <button class="u-ghost" :disabled="filters.page <= 1" @click="goToPage(filters.page - 1)">
-          이전
-        </button>
-        <span>{{ filters.page }} / {{ totalPages }}</span>
         <button
           class="u-ghost"
-          :disabled="filters.page >= totalPages"
-          @click="goToPage(filters.page + 1)"
+          :disabled="appliedFilters.page <= 1"
+          @click="goToPage(appliedFilters.page - 1)"
+        >
+          이전
+        </button>
+        <span>{{ appliedFilters.page }} / {{ totalPages }}</span>
+        <button
+          class="u-ghost"
+          :disabled="appliedFilters.page >= totalPages"
+          @click="goToPage(appliedFilters.page + 1)"
         >
           다음
         </button>
@@ -65,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue'
+import { computed, onBeforeUnmount, reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAsyncData } from 'nuxt/app'
 import { KIND_OPTIONS } from '~/utils/kind'
@@ -89,78 +93,42 @@ const getFiltersFromQuery = (query: typeof route.query) => ({
   pageSize: toNumber(query.pageSize as string, 9),
 })
 
-const filters = reactive(getFiltersFromQuery(route.query))
+type FiltersState = ReturnType<typeof getFiltersFromQuery>
 
-const isSameFilters = (next: ReturnType<typeof getFiltersFromQuery>) =>
-  filters.q === next.q &&
-  filters.kind === next.kind &&
-  filters.tag === next.tag &&
-  filters.sort === next.sort &&
-  filters.order === next.order &&
-  filters.page === next.page &&
-  filters.pageSize === next.pageSize
+const filters = reactive<FiltersState>(getFiltersFromQuery(route.query))
+const appliedFilters = reactive<FiltersState>(getFiltersFromQuery(route.query))
+let syncingFromRoute = false
+let debounceTimer: ReturnType<typeof setTimeout> | null = null
 
 watch(
   () => route.query,
   (query) => {
     const next = getFiltersFromQuery(query)
-    if (!isSameFilters(next)) {
-      Object.assign(filters, next)
-    }
+    syncingFromRoute = true
+    Object.assign(filters, next)
+    Object.assign(appliedFilters, next)
+    syncingFromRoute = false
   },
 )
 
-const normalizeQuery = (query: Record<string, string | string[] | undefined>) => {
-  const normalized: Record<string, string> = {}
-  for (const [key, value] of Object.entries(query)) {
-    if (value === undefined) continue
-    if (Array.isArray(value)) {
-      if (value[0] !== undefined) normalized[key] = String(value[0])
-      continue
-    }
-    normalized[key] = String(value)
-  }
-  return normalized
-}
-
-const buildQueryFromFilters = () => ({
-  q: filters.q || undefined,
-  kind: filters.kind || undefined,
-  tag: filters.tag || undefined,
-  sort: filters.sort,
-  order: filters.order,
-  page: String(filters.page),
-  pageSize: String(filters.pageSize),
+const buildQueryFromFilters = (source: FiltersState) => ({
+  q: source.q || undefined,
+  kind: source.kind || undefined,
+  tag: source.tag || undefined,
+  sort: source.sort,
+  order: source.order,
+  page: String(source.page),
+  pageSize: String(source.pageSize),
 })
 
-const isSameQuery = (current: Record<string, string>, next: Record<string, string>) => {
-  const currentKeys = Object.keys(current)
-  const nextKeys = Object.keys(next)
-  if (currentKeys.length !== nextKeys.length) return false
-  return currentKeys.every((key) => current[key] === next[key])
-}
-
-watch(
-  filters,
-  () => {
-    const nextQuery = buildQueryFromFilters()
-    const current = normalizeQuery(route.query as Record<string, string | string[] | undefined>)
-    const next = normalizeQuery(nextQuery)
-    if (!isSameQuery(current, next)) {
-      router.replace({ query: nextQuery })
-    }
-  },
-  { deep: true },
-)
-
 const queryPayload = computed(() => ({
-  q: filters.q || undefined,
-  kind: filters.kind || undefined,
-  tag: filters.tag || undefined,
-  sort: filters.sort,
-  order: filters.order,
-  page: filters.page,
-  pageSize: filters.pageSize,
+  q: appliedFilters.q || undefined,
+  kind: appliedFilters.kind || undefined,
+  tag: appliedFilters.tag || undefined,
+  sort: appliedFilters.sort,
+  order: appliedFilters.order,
+  page: appliedFilters.page,
+  pageSize: appliedFilters.pageSize,
 }))
 
 interface NotesListResponse {
@@ -207,31 +175,57 @@ const { data: tagsData } = await useAsyncData('tags', () => $fetch('/api/tags'))
 
 const tagsOptions = computed(() => tagsData.value || [])
 
-const applyFilters = () => {
-  router.push({
-    query: {
-      q: filters.q || undefined,
-      kind: filters.kind || undefined,
-      tag: filters.tag || undefined,
-      sort: filters.sort,
-      order: filters.order,
-      page: '1',
-      pageSize: String(filters.pageSize),
-    },
+const applyFilters = (options?: { replace?: boolean } | Event) => {
+  if (debounceTimer) {
+    clearTimeout(debounceTimer)
+    debounceTimer = null
+  }
+  const replace =
+    Boolean(options && typeof options === 'object' && 'replace' in options) &&
+    Boolean((options as { replace?: boolean }).replace)
+  const nextFilters: FiltersState = {
+    ...filters,
+    page: 1,
+  }
+  Object.assign(appliedFilters, nextFilters)
+  filters.page = 1
+  const navigate = replace ? router.replace : router.push
+  navigate({
+    query: buildQueryFromFilters(nextFilters),
   })
 }
 
 const goToPage = (page: number) => {
+  if (debounceTimer) {
+    clearTimeout(debounceTimer)
+    debounceTimer = null
+  }
+  filters.page = page
+  appliedFilters.page = page
   router.push({
-    query: {
-      ...route.query,
-      page: String(page),
-    },
+    query: buildQueryFromFilters(appliedFilters),
   })
 }
 
 const totalPages = computed(() => {
   const total = data.value?.total || 0
-  return Math.max(1, Math.ceil(total / filters.pageSize))
+  return Math.max(1, Math.ceil(total / appliedFilters.pageSize))
+})
+
+const scheduleSearch = () => {
+  if (syncingFromRoute) return
+  if (debounceTimer) clearTimeout(debounceTimer)
+  debounceTimer = setTimeout(() => {
+    debounceTimer = null
+    if (filters.q === appliedFilters.q && filters.tag === appliedFilters.tag) return
+    applyFilters({ replace: true })
+  }, 500)
+}
+
+watch(() => filters.q, scheduleSearch, { flush: 'sync' })
+watch(() => filters.tag, scheduleSearch, { flush: 'sync' })
+
+onBeforeUnmount(() => {
+  if (debounceTimer) clearTimeout(debounceTimer)
 })
 </script>

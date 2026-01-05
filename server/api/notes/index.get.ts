@@ -31,19 +31,40 @@ export default defineEventHandler((event) => {
     badRequest('Invalid order')
   }
 
-  let tagNoteIds: string[] | null = null
-  if (tag) {
-    const rows = db
-      .select({ noteId: noteTags.noteId })
-      .from(noteTags)
-      .innerJoin(tags, eq(noteTags.tagId, tags.id))
-      .where(eq(tags.name, tag))
-      .all()
+  const tagTerms = tag
+    .split(/[,\s]+/)
+    .map((entry) => entry.replace(/^#+/, '').trim())
+    .filter(Boolean)
 
-    tagNoteIds = rows.map((row) => row.noteId)
-    if (tagNoteIds.length === 0) {
-      return { items: [], total: 0, page, pageSize }
+  let tagNoteIds: string[] | null = null
+  if (tagTerms.length) {
+    const termMatches: string[][] = []
+    for (const term of tagTerms) {
+      const termLike = `%${term}%`
+      const rows = db
+        .select({ noteId: noteTags.noteId })
+        .from(noteTags)
+        .innerJoin(tags, eq(noteTags.tagId, tags.id))
+        .where(like(tags.name, termLike))
+        .all()
+
+      const ids = rows.map((row) => row.noteId)
+      if (!ids.length) {
+        return { items: [], total: 0, page, pageSize }
+      }
+      termMatches.push(ids)
     }
+
+    let intersection = new Set(termMatches[0])
+    for (let index = 1; index < termMatches.length; index += 1) {
+      const current = new Set(termMatches[index])
+      intersection = new Set([...intersection].filter((id) => current.has(id)))
+      if (!intersection.size) {
+        return { items: [], total: 0, page, pageSize }
+      }
+    }
+
+    tagNoteIds = [...intersection]
   }
 
   const conditions = []
