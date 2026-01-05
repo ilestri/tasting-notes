@@ -29,6 +29,13 @@
       "when": 1767610703207,
       "tag": "0003_optimize_indexes",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1767612450000,
+      "tag": "0004_tags_usage_count",
+      "breakpoints": true
     }
   ]
 }

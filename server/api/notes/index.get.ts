@@ -1,79 +1,18 @@
 import { getQuery } from 'h3'
-import { and, asc, desc, eq, inArray, like, or, sql } from 'drizzle-orm'
+import { eq, inArray, sql } from 'drizzle-orm'
 import { db } from '~/server/db'
 import { noteTags, notes, products, tags } from '~/server/db/schema'
-import { KIND_VALUES, badRequest } from '~/server/utils/validation'
 import type { NotesListResponse } from '~/types/api'
-
-const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
+import { buildNotesOrderBy, buildNotesWhere, parseNotesQuery } from '~/server/utils/notesQuery'
 
 export default defineEventHandler((event): NotesListResponse => {
-  const query = getQuery(event)
-
-  const q = typeof query.q === 'string' ? query.q.trim() : ''
-  const kind = typeof query.kind === 'string' ? query.kind.trim() : ''
-  const tag = typeof query.tag === 'string' ? query.tag.trim() : ''
-  const sort = typeof query.sort === 'string' ? query.sort : 'updatedAt'
-  const order = typeof query.order === 'string' ? query.order : 'desc'
-
-  const page = clamp(Number.parseInt(String(query.page || '1'), 10) || 1, 1, 500)
-  const pageSize = 9
-  const offset = (page - 1) * pageSize
-
-  if (kind && !KIND_VALUES.includes(kind as (typeof KIND_VALUES)[number])) {
-    badRequest('Invalid kind')
-  }
-
-  if (!['updatedAt', 'rating'].includes(sort)) {
-    badRequest('Invalid sort')
-  }
-
-  if (!['asc', 'desc'].includes(order)) {
-    badRequest('Invalid order')
-  }
-
-  const tagTerms = tag
-    .split(/[,\s]+/)
-    .map((entry) => entry.replace(/^#+/, '').trim())
-    .filter(Boolean)
-
-  const conditions = []
-  if (q) {
-    const qLike = `%${q}%`
-    conditions.push(
-      or(like(products.name, qLike), like(products.producer, qLike), like(notes.comment, qLike)),
-    )
-  }
-  if (kind) {
-    conditions.push(eq(products.kind, kind))
-  }
-  if (tagTerms.length) {
-    const tagConditions = tagTerms.map((term) => {
-      const termLike = `%${term}%`
-      const subquery = db
-        .select({ noteId: noteTags.noteId })
-        .from(noteTags)
-        .innerJoin(tags, eq(noteTags.tagId, tags.id))
-        .where(like(tags.name, termLike))
-      return inArray(notes.id, subquery)
-    })
-    conditions.push(and(...tagConditions))
-  }
-
-  const whereClause = conditions.length ? and(...conditions) : undefined
-
-  const totalRow = db
-    .select({ count: sql<number>`count(*)` })
-    .from(notes)
-    .innerJoin(products, eq(notes.productId, products.id))
-    .where(whereClause)
-    .get()
-
-  const sortColumn = sort === 'rating' ? notes.rating : notes.updatedAt
-  const orderBy = order === 'asc' ? asc(sortColumn) : desc(sortColumn)
+  const query = parseNotesQuery(getQuery(event))
+  const whereClause = buildNotesWhere(query)
+  const orderBy = buildNotesOrderBy(query.sort, query.order)
 
   const rows = db
     .select({
+      totalCount: sql<number>`count(*) over()`,
       noteId: notes.id,
       noteProductId: notes.productId,
       noteRating: notes.rating,
@@ -97,20 +36,11 @@ export default defineEventHandler((event): NotesListResponse => {
     .innerJoin(products, eq(notes.productId, products.id))
     .where(whereClause)
     .orderBy(orderBy)
-    .limit(pageSize)
-    .offset(offset)
+    .limit(query.pageSize)
+    .offset(query.offset)
     .all()
 
-  const tagCounts = db
-    .select({
-      name: tags.name,
-      count: sql<number>`count(${noteTags.noteId})`,
-    })
-    .from(tags)
-    .leftJoin(noteTags, eq(noteTags.tagId, tags.id))
-    .groupBy(tags.name)
-    .all()
-
+  const tagCounts = db.select({ name: tags.name, count: tags.usageCount }).from(tags).all()
   const tagCountMap = new Map(tagCounts.map((row) => [row.name, row.count]))
 
   const noteIds = rows.map((row) => row.noteId)
@@ -165,8 +95,8 @@ export default defineEventHandler((event): NotesListResponse => {
 
   return {
     items,
-    total: totalRow?.count ?? 0,
-    page,
-    pageSize,
+    total: rows[0]?.totalCount ?? 0,
+    page: query.page,
+    pageSize: query.pageSize,
   }
 })

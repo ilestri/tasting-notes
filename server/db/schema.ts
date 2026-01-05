@@ -63,6 +63,7 @@ export const tags = sqliteTable(
   {
     id: text('id').primaryKey(),
     name: text('name').notNull().unique(),
+    usageCount: integer('usage_count').notNull().default(0),
   },
   () => ({}),
 )
