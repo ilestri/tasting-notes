@@ -1,8 +1,9 @@
 import { eq, sql } from 'drizzle-orm'
 import { db } from '~/server/db'
 import { noteTags, tags } from '~/server/db/schema'
+import type { TagsResponse } from '~/types/api'
 
-export default defineEventHandler(() => {
+export default defineEventHandler((): TagsResponse => {
   const rows = db
     .select({
       name: tags.name,

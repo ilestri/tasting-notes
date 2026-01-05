@@ -3,10 +3,11 @@ import { and, asc, desc, eq, inArray, like, or, sql } from 'drizzle-orm'
 import { db } from '~/server/db'
 import { noteTags, notes, products, tags } from '~/server/db/schema'
 import { KIND_VALUES, badRequest } from '~/server/utils/validation'
+import type { NotesListResponse } from '~/types/api'
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
 
-export default defineEventHandler((event) => {
+export default defineEventHandler((event): NotesListResponse => {
   const query = getQuery(event)
 
   const q = typeof query.q === 'string' ? query.q.trim() : ''

@@ -22,8 +22,9 @@ import {
   parseOptionalText,
   parseRequiredText,
 } from '~/server/utils/adminNotes'
+import type { AdminOkResponse } from '~/types/api'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (event): Promise<AdminOkResponse> => {
   const noteId = getRouterParam(event, 'id')
   if (!noteId) {
     badRequest('note id is required')

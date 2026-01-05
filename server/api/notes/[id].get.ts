@@ -2,8 +2,9 @@ import { createError, getRouterParam } from 'h3'
 import { eq } from 'drizzle-orm'
 import { db } from '~/server/db'
 import { attachments, noteTags, noteTerms, notes, products, tags } from '~/server/db/schema'
+import type { NoteDetailResponse } from '~/types/api'
 
-export default defineEventHandler((event) => {
+export default defineEventHandler((event): NoteDetailResponse => {
   const id = getRouterParam(event, 'id')
   if (!id) {
     throw createError({ statusCode: 400, statusMessage: 'Missing note id' })
@@ -92,7 +93,7 @@ export default defineEventHandler((event) => {
     attachments: attachmentRows.map((row) => ({
       id: row.id,
       noteId: row.noteId,
-      kind: row.kind,
+      kind: row.kind as 'image' | 'file',
       urlOrPath: row.urlOrPath,
       mime: row.mime,
       createdAt: row.createdAt,

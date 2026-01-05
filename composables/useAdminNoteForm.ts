@@ -2,7 +2,7 @@ import { computed, reactive, ref } from 'vue'
 import type { Ref } from 'vue'
 import { getErrorMessage } from '~/utils/errors'
 import { parseNumber } from '~/utils/number'
-import type { NoteDetailResponse } from '~/types/api'
+import type { AdminNoteCreateResponse, AdminNotePayload, NoteDetailResponse } from '~/types/api'
 
 interface AdminFormState {
   noteId: string | null
@@ -110,7 +110,7 @@ export const useAdminNoteForm = ({ selectedId, refreshList }: UseAdminNoteFormOp
     }
   }
 
-  const buildPayload = () => ({
+  const buildPayload = (): AdminNotePayload => ({
     product: {
       id: form.productId ?? undefined,
       kind: form.product.kind,
@@ -160,7 +160,7 @@ export const useAdminNoteForm = ({ selectedId, refreshList }: UseAdminNoteFormOp
           body: payload,
         })
       } else {
-        const result = await $fetch<{ id: string }>('/api/admin/notes', {
+        const result = await $fetch<AdminNoteCreateResponse>('/api/admin/notes', {
           method: 'POST',
           body: payload,
         })

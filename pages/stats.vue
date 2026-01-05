@@ -96,22 +96,9 @@
 import { computed } from 'vue'
 import { useAsyncData } from 'nuxt/app'
 import { kindLabel } from '~/utils/kind'
+import type { StatsResponse } from '~/types/api'
 
-interface StatsResponse {
-  byKind: Array<{
-    kind: string
-    count: number
-    avgRating: number | null
-  }>
-  byMonth: Array<{
-    month: string
-    count: number
-    avgRating: number | null
-  }>
-}
-
-const fetchStats = () =>
-  ($fetch as unknown as (url: string) => Promise<StatsResponse>)('/api/stats')
+const fetchStats = () => $fetch<StatsResponse>('/api/stats' as string)
 
 const { data: stats, pending, error } = await useAsyncData<StatsResponse>('stats', fetchStats)
 

@@ -2,8 +2,9 @@ import { createError, getRouterParam } from 'h3'
 import { eq } from 'drizzle-orm'
 import { db } from '~/server/db'
 import { notes } from '~/server/db/schema'
+import type { AdminDeleteResponse } from '~/types/api'
 
-export default defineEventHandler((event) => {
+export default defineEventHandler((event): AdminDeleteResponse => {
   const id = getRouterParam(event, 'id')
   if (!id) {
     throw createError({ statusCode: 400, statusMessage: 'Missing note id' })

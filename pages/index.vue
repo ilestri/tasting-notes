@@ -73,7 +73,7 @@ import { computed, onBeforeUnmount, reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAsyncData } from 'nuxt/app'
 import { KIND_OPTIONS } from '~/utils/kind'
-import type { NotesListResponse } from '~/types/api'
+import type { NotesListResponse, TagsResponse } from '~/types/api'
 
 const route = useRoute()
 const router = useRouter()
@@ -139,7 +139,9 @@ const { data, pending, error } = await useAsyncData<NotesListResponse>('notes', 
   watch: [queryPayload],
 })
 
-const { data: tagsData } = await useAsyncData('tags', () => $fetch('/api/tags'))
+const { data: tagsData } = await useAsyncData<TagsResponse>('tags', () =>
+  $fetch<TagsResponse>('/api/tags' as string),
+)
 
 const tagsOptions = computed(() => tagsData.value || [])
 

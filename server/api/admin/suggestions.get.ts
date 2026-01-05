@@ -1,7 +1,8 @@
 import { db } from '~/server/db'
 import { noteTerms, tags } from '~/server/db/schema'
+import type { AdminSuggestionsResponse } from '~/types/api'
 
-export default defineEventHandler(() => {
+export default defineEventHandler((): AdminSuggestionsResponse => {
   const termRows = db
     .selectDistinct({ category: noteTerms.category, value: noteTerms.value })
     .from(noteTerms)

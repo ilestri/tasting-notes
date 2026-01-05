@@ -22,8 +22,9 @@ import {
   parseOptionalText,
   parseRequiredText,
 } from '~/server/utils/adminNotes'
+import type { AdminNoteCreateResponse } from '~/types/api'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (event): Promise<AdminNoteCreateResponse> => {
   const body = await readBody(event)
 
   if (!body || typeof body !== 'object') {

@@ -1,8 +1,9 @@
 import { desc, eq, sql } from 'drizzle-orm'
 import { db } from '~/server/db'
 import { notes, products } from '~/server/db/schema'
+import type { StatsResponse } from '~/types/api'
 
-export default defineEventHandler(() => {
+export default defineEventHandler((): StatsResponse => {
   const monthExpr = sql<string>`strftime('%Y-%m', ${notes.createdAt})`
 
   const byMonth = db
