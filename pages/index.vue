@@ -90,7 +90,7 @@ const getFiltersFromQuery = (query: typeof route.query) => ({
   sort: (query.sort as string) || 'updatedAt',
   order: (query.order as string) || 'desc',
   page: toNumber(query.page as string, 1),
-  pageSize: toNumber(query.pageSize as string, 9),
+  pageSize: 9,
 })
 
 type FiltersState = ReturnType<typeof getFiltersFromQuery>
@@ -118,7 +118,6 @@ const buildQueryFromFilters = (source: FiltersState) => ({
   sort: source.sort,
   order: source.order,
   page: String(source.page),
-  pageSize: String(source.pageSize),
 })
 
 const queryPayload = computed(() => ({
@@ -128,7 +127,6 @@ const queryPayload = computed(() => ({
   sort: appliedFilters.sort,
   order: appliedFilters.order,
   page: appliedFilters.page,
-  pageSize: appliedFilters.pageSize,
 }))
 
 interface NotesListResponse {
@@ -209,7 +207,7 @@ const goToPage = (page: number) => {
 
 const totalPages = computed(() => {
   const total = data.value?.total || 0
-  return Math.max(1, Math.ceil(total / appliedFilters.pageSize))
+  return Math.max(1, Math.ceil(total / 9))
 })
 
 const scheduleSearch = () => {

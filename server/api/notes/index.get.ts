@@ -16,7 +16,7 @@ export default defineEventHandler((event) => {
   const order = typeof query.order === 'string' ? query.order : 'desc'
 
   const page = clamp(Number.parseInt(String(query.page || '1'), 10) || 1, 1, 500)
-  const pageSize = clamp(Number.parseInt(String(query.pageSize || '9'), 10) || 9, 1, 100)
+  const pageSize = 9
   const offset = (page - 1) * pageSize
 
   if (kind && !KIND_VALUES.includes(kind as (typeof KIND_VALUES)[number])) {
