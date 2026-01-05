@@ -91,48 +91,9 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAsyncData } from 'nuxt/app'
 import { kindLabel } from '~/utils/kind'
+import type { NoteDetailResponse } from '~/types/api'
 
 const route = useRoute()
-
-interface NoteDetailResponse {
-  note: {
-    id: string
-    productId: string
-    rating: number | null
-    comment: string | null
-    createdAt: string
-    updatedAt: string
-  }
-  product: {
-    id: string
-    kind: string
-    name: string
-    producer: string | null
-    country: string | null
-    region: string | null
-    abv: number | null
-    vintage: string | null
-    age: number | null
-    volumeMl: number | null
-    createdAt: string
-    updatedAt: string
-  }
-  terms: {
-    nose: string[]
-    palate: string[]
-    finish: string[]
-    color: string[]
-  }
-  tags: string[]
-  attachments: Array<{
-    id: string
-    noteId: string
-    kind: 'image' | 'file'
-    urlOrPath: string
-    mime: string | null
-    createdAt: string
-  }>
-}
 
 const noteId = computed(() => String(route.params.id || ''))
 

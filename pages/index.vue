@@ -25,8 +25,8 @@
         <div class="c-field">
           <label>정렬</label>
           <select v-model="filters.sort" @change="applyFilters">
-            <option value="updatedAt">최근 수정</option>
             <option value="rating">평점</option>
+            <option value="updatedAt">최근 수정</option>
           </select>
         </div>
         <div class="c-field">
@@ -73,6 +73,7 @@ import { computed, onBeforeUnmount, reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAsyncData } from 'nuxt/app'
 import { KIND_OPTIONS } from '~/utils/kind'
+import type { NotesListResponse } from '~/types/api'
 
 const route = useRoute()
 const router = useRouter()
@@ -87,7 +88,7 @@ const getFiltersFromQuery = (query: typeof route.query) => ({
   q: (query.q as string) || '',
   kind: (query.kind as string) || '',
   tag: (query.tag as string) || '',
-  sort: (query.sort as string) || 'updatedAt',
+  sort: (query.sort as string) || 'rating',
   order: (query.order as string) || 'desc',
   page: toNumber(query.page as string, 1),
   pageSize: 9,
@@ -128,37 +129,6 @@ const queryPayload = computed(() => ({
   order: appliedFilters.order,
   page: appliedFilters.page,
 }))
-
-interface NotesListResponse {
-  items: Array<{
-    note: {
-      id: string
-      productId: string
-      rating: number | null
-      comment: string | null
-      createdAt: string
-      updatedAt: string
-    }
-    product: {
-      id: string
-      kind: string
-      name: string
-      producer: string | null
-      country: string | null
-      region: string | null
-      abv: number | null
-      vintage: string | null
-      age: number | null
-      volumeMl: number | null
-      createdAt: string
-      updatedAt: string
-    }
-    tags: string[]
-  }>
-  total: number
-  page: number
-  pageSize: number
-}
 
 const fetchNotes = () =>
   $fetch<NotesListResponse>('/api/notes' as string, {

@@ -3,9 +3,8 @@ import { noteTerms, tags } from '~/server/db/schema'
 
 export default defineEventHandler(() => {
   const termRows = db
-    .select({ category: noteTerms.category, value: noteTerms.value })
+    .selectDistinct({ category: noteTerms.category, value: noteTerms.value })
     .from(noteTerms)
-    .groupBy(noteTerms.category, noteTerms.value)
     .orderBy(noteTerms.category, noteTerms.value)
     .all()
 
