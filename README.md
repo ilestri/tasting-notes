@@ -1,6 +1,6 @@
 # Tasting Notes
 
-술(위스키/와인/사케/막걸리 등) 테이스팅 노트를 기록/조회/수정/삭제하는 Nuxt 3 SSR 앱입니다.
+술(위스키/와인/사케/막걸리 등) 테이스팅 노트를 조회하는 Nuxt 3 SSR 앱입니다.
 
 ## 로컬 실행
 
@@ -14,7 +14,6 @@ npm install
 
 ```bash
 DB_PATH=$PWD/data/tasting-notes.sqlite
-ADMIN_TOKEN=changeme-strong
 ```
 
 `DB_PATH`는 미설정 시 `${process.cwd()}/data/tasting-notes.sqlite`로 기본 설정됩니다.
@@ -45,11 +44,6 @@ npm run dev
 - `npm run preview`: 빌드 미리보기
 - `npm run generate`: 정적 생성
 
-## 인증
-
-- `POST/PUT/DELETE`는 `Authorization: Bearer <ADMIN_TOKEN>`이 필요합니다.
-- UI에서는 `/notes/new`에서 토큰을 입력하면 로컬스토리지에 저장되어 수정/삭제에도 재사용됩니다.
-
 ## 마이그레이션
 
 - Drizzle 스키마: `server/db/schema.ts`
@@ -70,7 +64,6 @@ node server/db/migrate.ts
 - Persistent Disk 마운트: `/var/data`
 - 환경 변수:
   - `DB_PATH=/var/data/tasting-notes.sqlite`
-  - `ADMIN_TOKEN=강한값`
 - Build Command:
   - `npm ci && npm run build`
 - Start Command:
@@ -87,6 +80,5 @@ SQLite 파일을 복사하면 됩니다.
 
 ## 옵션 기능
 
-- 제품 자동완성: `/api/products` 결과를 `NoteForm`에서 사용
 - 통계: `/api/stats` (월별/종류별 건수 및 평균 평점)
 - 첨부: 노트에 이미지/파일 URL 또는 경로 저장

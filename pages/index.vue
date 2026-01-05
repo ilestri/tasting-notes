@@ -133,10 +133,7 @@ const buildQueryFromFilters = () => ({
   pageSize: String(filters.pageSize),
 })
 
-const isSameQuery = (
-  current: Record<string, string>,
-  next: Record<string, string>,
-) => {
+const isSameQuery = (current: Record<string, string>, next: Record<string, string>) => {
   const currentKeys = Object.keys(current)
   const nextKeys = Object.keys(next)
   if (currentKeys.length !== nextKeys.length) return false

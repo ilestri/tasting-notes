@@ -39,7 +39,7 @@
 
 ## 삽입 절차 (SQL 예시)
 
-1) **ID 생성**
+1. **ID 생성**
 
 ```bash
 python3 - <<'PY'
@@ -51,7 +51,7 @@ print(uuid.uuid4())  # term_id (여러 개 필요)
 PY
 ```
 
-2) **products 삽입**
+2. **products 삽입**
 
 ```sql
 INSERT INTO products (
@@ -72,7 +72,7 @@ INSERT INTO products (
 );
 ```
 
-3) **notes 삽입**
+3. **notes 삽입**
 
 ```sql
 INSERT INTO notes (
@@ -87,7 +87,7 @@ INSERT INTO notes (
 );
 ```
 
-4) **note_terms 삽입**
+4. **note_terms 삽입**
 
 ```sql
 INSERT INTO note_terms (
@@ -100,7 +100,7 @@ INSERT INTO note_terms (
   (:term_id_5, :note_id, 'color', '투명', 0, datetime('now'));
 ```
 
-5) **tags / note_tags 삽입**
+5. **tags / note_tags 삽입**
 
 ```sql
 INSERT INTO tags (id, name)
@@ -112,7 +112,7 @@ SELECT :note_id, id FROM tags
 WHERE name IN ('일본 위스키', '산토리', '재패니즈 싱글 몰트');
 ```
 
-6) **attachments 삽입**
+6. **attachments 삽입**
 
 ```sql
 INSERT INTO attachments (

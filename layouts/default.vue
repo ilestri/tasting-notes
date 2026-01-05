@@ -8,7 +8,6 @@
       <nav class="c-nav-links">
         <NuxtLink :to="listLink" class="u-ghost">목록</NuxtLink>
         <NuxtLink to="/stats" class="u-ghost">통계</NuxtLink>
-        <NuxtLink to="/notes/new" class="u-primary">새 노트</NuxtLink>
       </nav>
     </header>
 
@@ -34,9 +33,15 @@ const listLink = computed(() => {
 
   for (const key of keys) {
     const value = route.query[key]
-    if (value !== undefined) {
-      query[key] = value
+    if (value === undefined || value === null) continue
+    if (Array.isArray(value)) {
+      const filtered = value.filter((entry) => entry !== null)
+      if (filtered.length) {
+        query[key] = filtered
+      }
+      continue
     }
+    query[key] = value
   }
 
   return { path: '/', query }

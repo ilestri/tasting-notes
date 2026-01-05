@@ -7,7 +7,7 @@
 - Nuxt 3 (SSR) + Vue 3 + TypeScript
 - DB: SQLite (better-sqlite3) + Drizzle ORM
 - 서버 API: Nuxt Nitro `server/api`
-- 목적: 술(위스키/와인/사케/막걸리 등) 테이스팅 노트 CRUD
+- 목적: 술(위스키/와인/사케/막걸리 등) 테이스팅 노트 조회
 
 ## 주요 경로
 
@@ -20,13 +20,7 @@
 ## 환경 변수
 
 - `DB_PATH`: 기본값 `${process.cwd()}/data/tasting-notes.sqlite`
-- `ADMIN_TOKEN`: 쓰기 작업 인증용
 - `.env`는 gitignore됨 (예시 값만 기록)
-
-## 인증
-
-- `POST/PUT/DELETE` 요청은 `Authorization: Bearer <ADMIN_TOKEN>` 필요
-- UI는 `/notes/new`에서 토큰 입력 → 로컬스토리지 저장 후 수정/삭제에도 재사용
 
 ## 데이터 모델 핵심
 
@@ -56,7 +50,6 @@
 - Persistent Disk: `/var/data`
 - 환경 변수:
   - `DB_PATH=/var/data/tasting-notes.sqlite`
-  - `ADMIN_TOKEN=강한값`
 - Build Command: `npm ci && npm run build`
 - Start Command: `npm run start`
 

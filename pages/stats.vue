@@ -17,9 +17,7 @@
       <div v-else class="c-stats-summary">
         <div class="c-stat-card">
           <p class="c-stat-label">총 노트</p>
-          <p class="c-stat-value">
-            {{ totalCount }}<span class="c-stat-unit">건</span>
-          </p>
+          <p class="c-stat-value">{{ totalCount }}<span class="c-stat-unit">건</span></p>
         </div>
         <div class="c-stat-card">
           <p class="c-stat-label">평균 평점</p>
