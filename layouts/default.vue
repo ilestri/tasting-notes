@@ -5,7 +5,7 @@
         <NuxtLink :to="listLink" class="c-brand-mark">Tasting Notes</NuxtLink>
         <p>나의 술 이야기</p>
       </div>
-      <nav class="c-nav-links">
+      <nav class="c-nav-links" :class="{ 'is-stats': activeNavIndex === 1 }">
         <NuxtLink :to="listLink" class="u-ghost">목록</NuxtLink>
         <NuxtLink to="/stats" class="u-ghost">통계</NuxtLink>
       </nav>
@@ -46,4 +46,6 @@ const listLink = computed(() => {
 
   return { path: '/', query }
 })
+
+const activeNavIndex = computed(() => (route.path.startsWith('/stats') ? 1 : 0))
 </script>
