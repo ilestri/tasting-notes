@@ -1,19 +1,25 @@
 import { index, integer, primaryKey, real, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 
-export const products = sqliteTable('products', {
-  id: text('id').primaryKey(),
-  kind: text('kind').notNull(),
-  name: text('name').notNull(),
-  producer: text('producer'),
-  country: text('country'),
-  region: text('region'),
-  abv: real('abv'),
-  vintage: text('vintage'),
-  age: integer('age'),
-  volumeMl: integer('volume_ml'),
-  createdAt: text('created_at').notNull(),
-  updatedAt: text('updated_at').notNull(),
-})
+export const products = sqliteTable(
+  'products',
+  {
+    id: text('id').primaryKey(),
+    kind: text('kind').notNull(),
+    name: text('name').notNull(),
+    producer: text('producer'),
+    country: text('country'),
+    region: text('region'),
+    abv: real('abv'),
+    vintage: text('vintage'),
+    age: integer('age'),
+    volumeMl: integer('volume_ml'),
+    createdAt: text('created_at').notNull(),
+    updatedAt: text('updated_at').notNull(),
+  },
+  (table) => ({
+    kindIdx: index('idx_products_kind').on(table.kind),
+  }),
+)
 
 export const notes = sqliteTable(
   'notes',
@@ -48,6 +54,7 @@ export const noteTerms = sqliteTable(
   },
   (table) => ({
     noteCategoryIdx: index('idx_note_terms_note_id_category').on(table.noteId, table.category),
+    categoryValueIdx: index('idx_note_terms_category_value').on(table.category, table.value),
   }),
 )
 
@@ -57,9 +64,7 @@ export const tags = sqliteTable(
     id: text('id').primaryKey(),
     name: text('name').notNull().unique(),
   },
-  (table) => ({
-    nameIdx: index('idx_tags_name').on(table.name),
-  }),
+  () => ({}),
 )
 
 export const noteTags = sqliteTable(
@@ -74,6 +79,7 @@ export const noteTags = sqliteTable(
   },
   (table) => ({
     pk: primaryKey({ columns: [table.noteId, table.tagId] }),
+    tagIdIdx: index('idx_note_tags_tag_id').on(table.tagId),
   }),
 )
 

@@ -36,37 +36,6 @@ export default defineEventHandler((event) => {
     .map((entry) => entry.replace(/^#+/, '').trim())
     .filter(Boolean)
 
-  let tagNoteIds: string[] | null = null
-  if (tagTerms.length) {
-    const termMatches: string[][] = []
-    for (const term of tagTerms) {
-      const termLike = `%${term}%`
-      const rows = db
-        .select({ noteId: noteTags.noteId })
-        .from(noteTags)
-        .innerJoin(tags, eq(noteTags.tagId, tags.id))
-        .where(like(tags.name, termLike))
-        .all()
-
-      const ids = rows.map((row) => row.noteId)
-      if (!ids.length) {
-        return { items: [], total: 0, page, pageSize }
-      }
-      termMatches.push(ids)
-    }
-
-    let intersection = new Set(termMatches[0])
-    for (let index = 1; index < termMatches.length; index += 1) {
-      const current = new Set(termMatches[index])
-      intersection = new Set([...intersection].filter((id) => current.has(id)))
-      if (!intersection.size) {
-        return { items: [], total: 0, page, pageSize }
-      }
-    }
-
-    tagNoteIds = [...intersection]
-  }
-
   const conditions = []
   if (q) {
     const qLike = `%${q}%`
@@ -77,8 +46,17 @@ export default defineEventHandler((event) => {
   if (kind) {
     conditions.push(eq(products.kind, kind))
   }
-  if (tagNoteIds) {
-    conditions.push(inArray(notes.id, tagNoteIds))
+  if (tagTerms.length) {
+    const tagConditions = tagTerms.map((term) => {
+      const termLike = `%${term}%`
+      const subquery = db
+        .select({ noteId: noteTags.noteId })
+        .from(noteTags)
+        .innerJoin(tags, eq(noteTags.tagId, tags.id))
+        .where(like(tags.name, termLike))
+      return inArray(notes.id, subquery)
+    })
+    conditions.push(and(...tagConditions))
   }
 
   const whereClause = conditions.length ? and(...conditions) : undefined

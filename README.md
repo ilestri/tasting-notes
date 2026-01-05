@@ -1,6 +1,7 @@
 # Tasting Notes
 
 술(위스키/와인/사케/막걸리 등) 테이스팅 노트를 조회하는 Nuxt 3 SSR 앱입니다.
+공개 페이지는 조회 전용이며, 추가/수정/삭제는 관리자에서만 가능합니다.
 
 ## 로컬 실행
 
@@ -92,3 +93,4 @@ SQLite 파일을 복사하면 됩니다.
 - 로그인: `/adm/login`
 - 관리 페이지: `/adm`
 - `ADMIN_PASSWORD`는 필수, `ADMIN_SESSION_SECRET`는 세션 서명용(선택)
+- 관리자 API: `/api/admin/*` (로그인/로그아웃/노트 CRUD/추천 데이터)

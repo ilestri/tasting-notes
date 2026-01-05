@@ -7,7 +7,7 @@
 - Nuxt 3 (SSR) + Vue 3 + TypeScript
 - DB: SQLite (better-sqlite3) + Drizzle ORM
 - 서버 API: Nuxt Nitro `server/api`
-- 목적: 술(위스키/와인/사케/막걸리 등) 테이스팅 노트 조회
+- 목적: 술(위스키/와인/사케/막걸리 등) 테이스팅 노트 조회 (공개는 조회 전용, 관리는 관리자에서 처리)
 
 ## 주요 경로
 
@@ -16,6 +16,7 @@
 - API: `server/api/**`
 - UI: `pages/**`, `components/**`
 - 유틸/타입: `utils/**`, `types/**`
+- 스타일: `assets/main.css` (모든 CSS는 이 파일에 모음)
 
 ## 환경 변수
 
@@ -34,6 +35,12 @@
 ## 새 술 데이터 추가
 
 - 새 술을 DB에 넣을 때는 `docs/new-drink-insert-guide.md`를 먼저 참고
+
+## 관리자
+
+- 로그인: `/adm/login`
+- 관리 페이지: `/adm`
+- 관리자 API: `/api/admin/*`
 
 ## 스크립트
 
