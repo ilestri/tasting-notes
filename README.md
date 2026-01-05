@@ -14,6 +14,8 @@ npm install
 
 ```bash
 DB_PATH=$PWD/data/tasting-notes.sqlite
+ADMIN_PASSWORD=changeme-strong
+ADMIN_SESSION_SECRET=change-me-session
 ```
 
 `DB_PATH`는 미설정 시 `${process.cwd()}/data/tasting-notes.sqlite`로 기본 설정됩니다.
@@ -64,6 +66,8 @@ node server/db/migrate.ts
 - Persistent Disk 마운트: `/var/data`
 - 환경 변수:
   - `DB_PATH=/var/data/tasting-notes.sqlite`
+  - `ADMIN_PASSWORD=강한값`
+  - `ADMIN_SESSION_SECRET=강한값`
 - Build Command:
   - `npm ci && npm run build`
 - Start Command:
@@ -82,3 +86,9 @@ SQLite 파일을 복사하면 됩니다.
 
 - 통계: `/api/stats` (월별/종류별 건수 및 평균 평점)
 - 첨부: 노트에 이미지/파일 URL 또는 경로 저장
+
+## 관리자
+
+- 로그인: `/adm/login`
+- 관리 페이지: `/adm`
+- `ADMIN_PASSWORD`는 필수, `ADMIN_SESSION_SECRET`는 세션 서명용(선택)

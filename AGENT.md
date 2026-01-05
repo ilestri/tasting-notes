@@ -20,6 +20,8 @@
 ## 환경 변수
 
 - `DB_PATH`: 기본값 `${process.cwd()}/data/tasting-notes.sqlite`
+- `ADMIN_PASSWORD`: 관리자 로그인 비밀번호
+- `ADMIN_SESSION_SECRET`: 세션 서명용 비밀키 (선택)
 - `.env`는 gitignore됨 (예시 값만 기록)
 
 ## 데이터 모델 핵심
@@ -50,6 +52,8 @@
 - Persistent Disk: `/var/data`
 - 환경 변수:
   - `DB_PATH=/var/data/tasting-notes.sqlite`
+  - `ADMIN_PASSWORD=강한값`
+  - `ADMIN_SESSION_SECRET=강한값`
 - Build Command: `npm ci && npm run build`
 - Start Command: `npm run start`
 
